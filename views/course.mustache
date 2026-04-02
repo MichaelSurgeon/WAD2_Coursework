@@ -33,14 +33,15 @@
           <td>{{booked}}</td>
           <td>{{remaining}}</td>
           <td>
-            {{#../course.allowDropIn}}
-            <form method="postook
+            {{#course.allowDropIn}}
+            <form action="/sessions/{{_id}}/book" method="post">
+              <input type="hidden" name="userId" value="{{../../user._id}}">
               <button class="btn" type="submit" {{#isFull}}disabled{{/isFull}}>Book this session</button>
             </form>
-            {{/../course.allowDropIn}}
-            {{^../course.allowDropIn}}
+            {{/course.allowDropIn}}
+            {{^course.allowDropIn}}
               <span class="muted">Drop-ins disabled</span>
-            {{/../course.allowDropIn}}
+            {{/course.allowDropIn}}
           </td>
         </tr>
         {{/sessions}}

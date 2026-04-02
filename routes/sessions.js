@@ -1,5 +1,4 @@
 
-// routes/sessions.js
 import { Router } from 'express';
 import { SessionModel } from '../models/sessionModel.js';
 
@@ -16,4 +15,3 @@ router.get('/by-course/:courseId', async (req, res) => {
 });
 
 export default router;
-``

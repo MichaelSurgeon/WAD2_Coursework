@@ -13,4 +13,4 @@ export const UserModel = {
     return usersDb.findOne({ _id: id });
   }
 };
-``
+

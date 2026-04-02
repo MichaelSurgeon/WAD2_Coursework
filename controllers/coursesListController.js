@@ -1,27 +1,7 @@
 // controllers/coursesListController.js
 import { CourseModel } from "../models/courseModel.js";
 import { SessionModel } from "../models/sessionModel.js";
-
-const fmtDateOnly = (iso) =>
-  iso
-    ? new Date(iso).toLocaleDateString("en-GB", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      })
-    : "";
-
-const fmtDateTime = (iso) =>
-  iso
-    ? new Date(iso).toLocaleString("en-GB", {
-        weekday: "short",
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "TBA";
+import { fmtDateOnly, fmtDateTime } from "../utils/dateFormatter.js";
 
 export const coursesListPage = async (req, res, next) => {
   try {
@@ -109,6 +89,7 @@ export const coursesListPage = async (req, res, next) => {
 
     res.render("courses", {
       title: "Courses",
+      user: req.user,
       filters: {
         level,
         type,

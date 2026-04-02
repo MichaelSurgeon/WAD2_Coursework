@@ -6,22 +6,7 @@ import {
   bookSessionForUser,
 } from "../services/bookingService.js";
 import { BookingModel } from "../models/bookingModel.js";
-
-const fmtDate = (iso) =>
-  new Date(iso).toLocaleString("en-GB", {
-    weekday: "short",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-const fmtDateOnly = (iso) =>
-  new Date(iso).toLocaleDateString("en-GB", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+import { fmtDate, fmtDateOnly } from "../utils/dateFormatter.js";
 
 export const homePage = async (req, res, next) => {
   try {
@@ -44,7 +29,11 @@ export const homePage = async (req, res, next) => {
         };
       })
     );
-    res.render("home", { title: "Yoga Courses", courses: cards });
+    res.render("home", {
+      title: "Yoga Courses",
+      user: req.user,
+      courses: cards,
+    });
   } catch (err) {
     next(err);
   }
@@ -61,16 +50,19 @@ export const courseDetailPage = async (req, res, next) => {
 
     const sessions = await SessionModel.listByCourse(courseId);
     const rows = sessions.map((s) => ({
+      _id: s._id,
       id: s._id,
       start: fmtDate(s.startDateTime),
       end: fmtDate(s.endDateTime),
       capacity: s.capacity,
       booked: s.bookedCount ?? 0,
       remaining: Math.max(0, (s.capacity ?? 0) - (s.bookedCount ?? 0)),
+      isFull: (s.bookedCount ?? 0) >= (s.capacity ?? 0),
     }));
 
     res.render("course", {
       title: course.title,
+      user: req.user,
       course: {
         id: course._id,
         title: course.title,
@@ -125,6 +117,7 @@ export const bookingConfirmationPage = async (req, res, next) => {
 
     res.render("booking_confirmation", {
       title: "Booking confirmation",
+      user: req.user,
       booking: {
         id: booking._id,
         type: booking.type,
