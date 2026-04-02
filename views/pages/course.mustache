@@ -2,34 +2,109 @@
 {{> header}}
 
 <main class="wrap">
-  <article>
-    <h1>{{course.title}}</h1>
-  <p class="muted">
-    Level: {{course.level}} • Type: {{course.type}} {{#course.allowDropIn}}• Drop-in available{{/course.allowDropIn}}
-  </p>
-  <p>{{course.description}}</p>
-  <p class="muted">Dates: {{course.startDate}} – {{course.endDate}}</p>
+  <div style="max-width: 900px; margin: 2rem auto;">
+    <div class="card" style="margin-bottom: 2rem;">
+      <div class="card-header">
+        <h1 style="margin: 0;">{{course.title}}</h1>
+        <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">
+          Level: <strong>{{course.level}}</strong> • Type: <strong>{{course.type}}</strong> {{#course.allowDropIn}}• Drop-in available{{/course.allowDropIn}}
+        </p>
+      </div>
 
-  <section>
-    <h2>Book the full course</h2>
-    <form action="/courses/{{course.id}}/book" method="post">
-      <input type="hidden" name="userId" value="{{user._id}}">
-      <button class="btn primary" type="submit">Book full course</button>
-    </form>
-  </section>
+      <div class="card-section">
+        <p style="color: #666; margin: 0; line-height: 1.6;">{{course.description}}</p>
+      </div>
 
-  <section>
-    <h2>Sessions</h2>
-    <table class="table">
-      <thead>
-        <tr><th>Start</th><th>End</th><th>Capacity</th><th>Booked</th><th>Remaining</th><th></th></tr>
-      </thead>
-      <tbody>
-        {{> sessionRow}}
-      </tbody>
-    </table>
-  </section>
-  </article>
+      <div class="card-section">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          {{#course.location}}
+          <div class="info-box">
+            <strong>📍 Location</strong>
+            <p style="margin: 0.5rem 0 0 0; color: #666;">{{course.location}}</p>
+          </div>
+          {{/course.location}}
+          {{#course.priceDisplay}}
+          <div class="info-box">
+            <strong>💷 Pricing</strong>
+            <p style="margin: 0.5rem 0 0 0; color: #666;">{{course.priceDisplay}}</p>
+          </div>
+          {{/course.priceDisplay}}
+          <div class="info-box">
+            <strong>📅 Duration</strong>
+            <p style="margin: 0.5rem 0 0 0; color: #666;">{{course.startDate}} – {{course.endDate}}</p>
+          </div>
+          {{#course.sessionsCount}}
+          <div class="info-box">
+            <strong>🧘 Sessions</strong>
+            <p style="margin: 0.5rem 0 0 0; color: #666;">{{course.sessionsCount}} total sessions</p>
+          </div>
+          {{/course.sessionsCount}}
+        </div>
+      </div>
+
+      {{#user}}
+      <div class="card-action">
+        <form action="/courses/{{course.id}}/book" method="post" style="width: 100%;">
+          <input type="hidden" name="userId" value="{{user._id}}">
+          <button class="btn btn-primary" type="submit" style="width: 100%; padding: 0.8rem;">Book This Course</button>
+        </form>
+      </div>
+      {{/user}}
+      {{^user}}
+      <div class="card-section" style="background-color: #f0f8ff; border-left: 4px solid var(--brand); text-align: center;">
+        <p style="margin: 0; color: #333;">To book this course, please <a href="/login" style="color: var(--brand); font-weight: 600;">log in</a> or <a href="/register" style="color: var(--brand); font-weight: 600;">register</a>.</p>
+      </div>
+      {{/user}}
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2 style="margin: 0;">Class Schedule</h2>
+        <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">All available sessions for this course</p>
+      </div>
+
+      <div class="card-section" style="overflow-x: auto;">
+        <table class="table" style="width: 100%; border-collapse: collapse;">
+          <thead style="background-color: #f5f5f5;">
+            <tr style="border-bottom: 2px solid #ddd;">
+              <th style="text-align: left; padding: 0.8rem; font-weight: 600;">Start Time</th>
+              <th style="text-align: left; padding: 0.8rem; font-weight: 600;">End Time</th>
+              <th style="text-align: center; padding: 0.8rem; font-weight: 600;">Capacity</th>
+              <th style="text-align: center; padding: 0.8rem; font-weight: 600;">Booked</th>
+              <th style="text-align: center; padding: 0.8rem; font-weight: 600;">Available</th>
+              <th style="text-align: center; padding: 0.8rem; font-weight: 600;">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#sessions}}
+            <tr>
+              <td><time datetime="{{startIso}}">{{start}}</time></td>
+              <td><time datetime="{{endIso}}">{{end}}</time></td>
+              <td>{{capacity}}</td>
+              <td>{{booked}}</td>
+              <td>{{remaining}}</td>
+              <td>
+                {{#course.allowDropIn}}
+                  <form action="/sessions/{{_id}}/book" method="post">
+                    {{#user}}
+                    <button class="btn" type="submit" {{#isFull}}disabled aria-disabled="true"{{/isFull}}>{{#isFull}}Full{{/isFull}}{{^isFull}}Book{{/isFull}}</button>
+                    {{/user}}
+                    {{^user}}
+                    <span class="muted">Log in to book</span>
+                    {{/user}}
+                  </form>
+                {{/course.allowDropIn}}
+                {{^course.allowDropIn}}
+                  <span class="muted">Drop-ins disabled</span>
+                {{/course.allowDropIn}}
+              </td>
+            </tr>
+            {{/sessions}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </main>
 
 {{> footer}}

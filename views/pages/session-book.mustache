@@ -4,9 +4,9 @@
 <main class="wrap">
   <div class="card" style="max-width: 700px; margin: 2rem auto;">
     <div class="card-header">
-      <h1 style="margin: 0;">Book: {{course.title}}</h1>
+      <h1 style="margin: 0;">Confirm Session Booking</h1>
       <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">
-        Level: <strong>{{course.level}}</strong> • Type: <strong>{{course.type}}</strong> {{#course.allowDropIn}}• Drop-in available{{/course.allowDropIn}}
+        {{session.courseName}}
       </p>
     </div>
 
@@ -22,12 +22,16 @@
     {{/errors}}
 
     <div class="card-section">
-      <h3 style="margin: 0 0 1rem 0; color: #333;">Course Information</h3>
-      <p style="color: #666; margin: 0;">{{course.description}}</p>
-      <p style="color: #999; font-size: 0.9rem; margin: 1rem 0 0 0;">📅 {{course.startDate}} – {{course.endDate}}</p>
+      <h3 style="margin: 0 0 1rem 0; color: #333;">Session Information</h3>
+      <p style="color: #666; margin: 0;">
+        📅 {{session.start}} to {{session.end}}
+      </p>
+      <p style="color: #666; margin: 1rem 0 0 0;">
+        Places available: <strong>{{session.remaining}}</strong> of {{session.capacity}}
+      </p>
     </div>
 
-    <form method="post" action="/courses/{{course.id}}/book">
+    <form method="post" action="/sessions/{{session._id}}/book">
       <input type="hidden" name="userId" value="{{user._id}}">
 
       <div class="card-section">
@@ -54,20 +58,10 @@
         </div>
       </div>
 
-      <div class="card-section">
-        <h3 style="margin: 0 0 1rem 0; color: #333;">Booking Summary</h3>
-        <p style="color: #666; margin: 0;">This booking reserves your seat across <strong>{{sessionsCount}}</strong> sessions:</p>
-        <ul style="margin: 1rem 0 0 0; color: #666; padding-left: 1.5rem;">
-          {{#sessions}}
-          <li style="margin: 0.5rem 0;">{{start}} <span style="color: #999;">({{remaining}} places left)</span></li>
-          {{/sessions}}
-        </ul>
-      </div>
-
       <div class="card-action">
         <div style="display: flex; gap: 1rem; justify-content: center;">
           <button class="btn btn-primary" type="submit" style="flex: 1;">Confirm Booking</button>
-          <a href="/courses/{{course.id}}" class="btn" style="flex: 1; text-align: center; padding: 0.7rem 1rem; background-color: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; border: 1px solid #ddd;">Cancel</a>
+          <a href="/" class="btn" style="flex: 1; text-align: center; padding: 0.7rem 1rem; background-color: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; border: 1px solid #ddd;">Cancel</a>
         </div>
       </div>
     </form>

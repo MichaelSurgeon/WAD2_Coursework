@@ -7,10 +7,15 @@
   <td>{{remaining}}</td>
   <td>
     {{#course.allowDropIn}}
-    <form action="/sessions/{{_id}}/book" method="post">
-      <input type="hidden" name="userId" value="{{../../user._id}}">
-      <button class="btn" type="submit" {{#isFull}}disabled aria-disabled="true"{{/isFull}}>{{#isFull}}Full{{/isFull}}{{^isFull}}Book this session{{/isFull}}</button>
-    </form>
+      {{#user}}
+      <form action="/sessions/{{_id}}/book" method="post">
+        <input type="hidden" name="userId" value="{{user._id}}">
+        <button class="btn" type="submit" {{#isFull}}disabled aria-disabled="true"{{/isFull}}>{{#isFull}}Full{{/isFull}}{{^isFull}}Book{{/isFull}}</button>
+      </form>
+      {{/user}}
+      {{^user}}
+      <span class="muted">Log in to book</span>
+      {{/user}}
     {{/course.allowDropIn}}
     {{^course.allowDropIn}}
       <span class="muted">Drop-ins disabled</span>

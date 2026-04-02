@@ -3,9 +3,6 @@ import { CourseModel } from "../models/courseModel.js";
 import { SessionModel } from "../models/sessionModel.js";
 import { BookingModel } from "../models/bookingModel.js";
 
-const canReserveAll = (sessions) =>
-  sessions.every((s) => (s.bookedCount ?? 0) < (s.capacity ?? 0));
-
 export async function bookCourseForUser(userId, courseId) {
   const course = await CourseModel.findById(courseId);
   if (!course) throw new Error("Course not found");
@@ -13,10 +10,17 @@ export async function bookCourseForUser(userId, courseId) {
   if (sessions.length === 0) throw new Error("Course has no sessions");
 
   let status = "CONFIRMED";
-  if (!canReserveAll(sessions)) {
+  const failedSessions = [];
+
+  for (const s of sessions) {
+    const success = await SessionModel.incrementBookedCountIfCapacity(s._id);
+    if (!success) {
+      failedSessions.push(s._id);
+    }
+  }
+
+  if (failedSessions.length > 0) {
     status = "WAITLISTED";
-  } else {
-    for (const s of sessions) await SessionModel.incrementBookedCount(s._id, 1);
   }
 
   return BookingModel.create({
@@ -40,18 +44,51 @@ export async function bookSessionForUser(userId, sessionId) {
     throw err;
   }
 
+  const incrementedSuccessfully = await SessionModel.incrementBookedCountIfCapacity(sessionId);
   let status = "CONFIRMED";
-  if ((session.bookedCount ?? 0) >= (session.capacity ?? 0)) {
+
+  if (!incrementedSuccessfully) {
     status = "WAITLISTED";
-  } else {
-    await SessionModel.incrementBookedCount(session._id, 1);
   }
 
   return BookingModel.create({
     userId,
     courseId: course._id,
     type: "SESSION",
-    sessionIds: [session._id],
+    sessionIds: [sessionId],
     status,
   });
+}
+
+export async function getBookingById(bookingId) {
+  const booking = await BookingModel.findById(bookingId);
+  if (!booking) {
+    const err = new Error("Booking not found");
+    err.code = "NOT_FOUND";
+    throw err;
+  }
+  return booking;
+}
+
+export async function cancelBooking(bookingId, userId) {
+  const booking = await getBookingById(bookingId);
+
+  if (booking.userId !== userId) {
+    const err = new Error("You can only cancel your own bookings");
+    err.code = "FORBIDDEN";
+    throw err;
+  }
+
+  if (booking.status === "CANCELLED") {
+    return booking;
+  }
+
+  if (booking.status === "CONFIRMED") {
+    for (const sessionId of booking.sessionIds) {
+      await SessionModel.incrementBookedCount(sessionId, -1);
+    }
+  }
+
+  const updated = await BookingModel.cancel(bookingId);
+  return updated;
 }

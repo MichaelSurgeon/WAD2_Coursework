@@ -2,19 +2,38 @@
 {{> header}}
 
 <main class="wrap">
-  <article>
-    <h1>Booking Confirmation</h1>
-<p>Your booking has been created.</p>
+  <div class="card" style="max-width: 600px; margin: 2rem auto;">
+    <div class="card-header" style="background-color: #e8f5e9; border-bottom: 2px solid #4caf50;">
+      <h1 style="margin: 0; color: #2e7d32;">✓ Booking Confirmed</h1>
+      <p style="margin: 0.5rem 0 0 0; color: #558b2f; font-size: 0.95rem;">Your yoga class booking has been successfully created</p>
+    </div>
 
-<dl class="kv">
-  <dt>ID</dt><dd>{{booking.id}}</dd>
-  <dt>Type</dt><dd>{{booking.type}}</dd>
-  <dt>Status</dt><dd>{{booking.status}}</dd>
-  <dt>Created</dt><dd>{{booking.createdAt}}</dd>
-</dl>
+    <div class="card-section">
+      <h3 style="margin: 0 0 1rem 0; color: #333;">Booking Details</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div class="info-box">
+          <strong>Booking ID</strong>
+          <p style="margin: 0.5rem 0 0 0; font-family: monospace; color: #666;">{{booking.id}}</p>
+        </div>
+        <div class="info-box">
+          <strong>Type</strong>
+          <p style="margin: 0.5rem 0 0 0; color: #666; text-transform: capitalize;">{{booking.type}}</p>
+        </div>
+        <div class="info-box">
+          <strong>Status</strong>
+          <p style="margin: 0.5rem 0 0 0; color: #4caf50; font-weight: 600; text-transform: uppercase;">{{booking.status}}</p>
+        </div>
+        <div class="info-box">
+          <strong>Created</strong>
+          <p style="margin: 0.5rem 0 0 0; color: #666;">{{booking.createdAt}}</p>
+        </div>
+      </div>
+    </div>
 
-    <p><a class="btn" href="/">Back to home</a></p>
-  </article>
+    <div class="card-action">
+      <a href="/" class="btn btn-primary" style="display: inline-block; padding: 0.7rem 2rem;">Continue Browsing</a>
+    </div>
+  </div>
 </main>
 
 {{> footer}}

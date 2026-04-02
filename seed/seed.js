@@ -1,4 +1,5 @@
 // seed/seed.js
+import bcrypt from "bcrypt";
 import {
   initDb,
   usersDb,
@@ -42,22 +43,24 @@ async function ensureDemoStudent() {
 }
 
 async function createAuthUsers() {
-  // Create organiser user
+  // Create organiser user with hashed password
+  const hashedAdminPassword = await bcrypt.hash("admin", 10);
   const admin = await UserModel.create({
     username: "admin",
-    password: "admin",
+    password: hashedAdminPassword,
     name: "Admin User",
     email: "admin@yoga.local",
     role: "organiser",
   });
 
-  // Create regular user
+  // Create regular user with hashed password
+  const hashedUserPassword = await bcrypt.hash("user", 10);
   const user = await UserModel.create({
     username: "user",
-    password: "user",
+    password: hashedUserPassword,
     name: "Regular User",
     email: "user@yoga.local",
-    role: "user",
+    role: "student",
   });
 
   return { admin, user };
@@ -76,6 +79,8 @@ async function createWeekendWorkshop() {
     allowDropIn: false,
     startDate: "2026-01-10",
     endDate: "2026-01-11",
+    location: "Studio A, 42 Wellness Street",
+    price: 85,
     instructorId: instructor._id,
     sessionIds: [],
     description: "Two days of breath, posture alignment, and meditation.",
@@ -114,6 +119,8 @@ async function createWeeklyBlock() {
     allowDropIn: true,
     startDate: "2026-02-02",
     endDate: "2026-04-20",
+    location: "Studio B, 42 Wellness Street",
+    price: 180,
     instructorId: instructor._id,
     sessionIds: [],
     description: "Progressive sequences building strength and flexibility.",

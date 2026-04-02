@@ -1,26 +1,29 @@
-import { UserModel } from "../models/userModel.js";
+import jwt from "jsonwebtoken";
 
 export const ensureUser = async (req, res, next) => {
     try {
-        if (!req.user) {
-            const email = "fiona@student.local";
-            let user = await UserModel.findByEmail(email);
-            if (!user) {
-                try {
-                    user = await UserModel.create({
-                        name: "Fiona",
-                        email,
-                        role: "student",
-                    });
-                } catch (err) {
-                    // If creation fails due to unique constraint, try finding again
-                    user = await UserModel.findByEmail(email);
-                    if (!user) throw err;
-                }
-            }
-            req.user = user;
+        if (req.user) {
+            req.user.isOrganiser = req.user.role === "organiser";
+            req.user.isStudent = req.user.role === "student";
+            res.locals.user = req.user;
+            return next();
         }
-        res.locals.user = req.user;
+
+        const token = req.cookies.jwt;
+        if (token) {
+            try {
+                const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+                decoded.isOrganiser = decoded.role === "organiser";
+                decoded.isStudent = decoded.role === "student";
+                req.user = decoded;
+                res.locals.user = decoded;
+            } catch {
+                res.locals.user = null;
+            }
+        } else {
+            res.locals.user = null;
+        }
+
         next();
     } catch (err) {
         next(err);

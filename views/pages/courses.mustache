@@ -2,52 +2,62 @@
 {{> header}}
 
 <main class="wrap">
-  <h1>Browse Courses</h1>
-  <section class="filters" aria-label="Course filters">
-    <form method="get">
-      <label>
-        <span>Level</span>
-        <select name="level">
-          <option value="" {{^filters.level}}selected{{/filters.level}}>Any</option>
-          <option value="beginner" {{#filters.level}}{{#isBeginner}}selected{{/isBeginner}}{{/filters.level}}>Beginner</option>
-          <option value="intermediate" {{#filters.level}}{{#isIntermediate}}selected{{/isIntermediate}}{{/filters.level}}>Intermediate</option>
-          <option value="advanced" {{#filters.level}}{{#isAdvanced}}selected{{/isAdvanced}}{{/filters.level}}>Advanced</option>
-        </select>
-      </label>
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <h1 style="margin: 2rem 0 1rem 0;">Browse Yoga Courses</h1>
 
-      <label>
-        <span>Type</span>
-        <select name="type">
-          <option value="" {{^filters.type}}selected{{/filters.type}}>Any</option>
-          <option value="WEEKLY_BLOCK" {{#filters.type}}{{#isWeekly}}selected{{/isWeekly}}{{/filters.type}}>Weekly Block</option>
-          <option value="WEEKEND_WORKSHOP" {{#filters.type}}{{#isWeekend}}selected{{/isWeekend}}{{/filters.type}}>Weekend Workshop</option>
-        </select>
-      </label>
-
-      <label>
-        <span>Drop-in</span>
-        <select name="dropin">
-          <option value="" {{^filters.dropin}}selected{{/filters.dropin}}>Any</option>
-          <option value="yes" {{#filters.dropin}}{{#isYes}}selected{{/isYes}}{{/filters.dropin}}>Yes</option>
-          <option value="no" {{#filters.dropin}}{{#isNo}}selected{{/isNo}}{{/filters.dropin}}>No</option>
-        </select>
-      </label>
-
-      <label>
-        <span>Search</span>
-        <input type="search" name="q" value="{{filters.q}}" placeholder="Title or description" />
-      </label>
-
-      <div class="actions">
-        <button class="btn primary" type="submit">Apply Filters</button>
-        <a href="/courses" class="btn">Reset</a>
+    <div class="card" style="margin-bottom: 2rem;">
+      <div class="card-header">
+        <h2 style="margin: 0;">Filter Courses</h2>
       </div>
-    </form>
-  </section>
 
-  <section class="cards" aria-label="Course results">
-    {{> courseCard}}
-  </section>
+      <form method="get" class="card-section">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+          <div>
+            <label for="level" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Level</label>
+            <select name="level" id="level" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95rem;">
+              <option value="" {{^filters.level}}selected{{/filters.level}}>Any Level</option>
+              <option value="beginner" {{#filters.level}}{{#isBeginner}}selected{{/isBeginner}}{{/filters.level}}>Beginner</option>
+              <option value="intermediate" {{#filters.level}}{{#isIntermediate}}selected{{/isIntermediate}}{{/filters.level}}>Intermediate</option>
+              <option value="advanced" {{#filters.level}}{{#isAdvanced}}selected{{/isAdvanced}}{{/filters.level}}>Advanced</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="type" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Course Type</label>
+            <select name="type" id="type" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95rem;">
+              <option value="" {{^filters.type}}selected{{/filters.type}}>Any Type</option>
+              <option value="WEEKLY_BLOCK" {{#filters.type}}{{#isWeekly}}selected{{/isWeekly}}{{/filters.type}}>Weekly Block</option>
+              <option value="WEEKEND_WORKSHOP" {{#filters.type}}{{#isWeekend}}selected{{/isWeekend}}{{/filters.type}}>Weekend Workshop</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="dropin" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Drop-in Availability</label>
+            <select name="dropin" id="dropin" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95rem;">
+              <option value="" {{^filters.dropin}}selected{{/filters.dropin}}>Any</option>
+              <option value="yes" {{#filters.dropin}}{{#isYes}}selected{{/isYes}}{{/filters.dropin}}>Drop-in Available</option>
+              <option value="no" {{#filters.dropin}}{{#isNo}}selected{{/isNo}}{{/filters.dropin}}>Full Course Only</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+          <label for="q" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Search</label>
+          <input type="search" name="q" id="q" value="{{filters.q}}" placeholder="Search by course name or description..." style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95rem;">
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+          <button class="btn btn-primary" type="submit" style="flex: 1; padding: 0.7rem;">Apply Filters</button>
+          <a href="/courses" class="btn btn-secondary {{#hasActiveFilters}}btn-secondary-active{{/hasActiveFilters}}" style="flex: 1; text-align: center; padding: 0.7rem;">Reset</a>
+        </div>
+      </form>
+    </div>
+
+    <section aria-label="Course results" class="cards">
+      {{#courses}}{{> courseCard}}{{/courses}}
+      {{^courses}}<p class="empty-message">No courses found matching your filters.</p>{{/courses}}
+    </section>
+  </div>
 </main>
 
 {{> footer}}

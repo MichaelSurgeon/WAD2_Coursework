@@ -10,6 +10,7 @@ import mustacheExpress from "mustache-express";
 
 // Internal modules
 import viewRoutes from "./routes/views.js";
+import adminRoutes from "./routes/admin/index.js";
 import { initDb } from "./models/_db.js";
 import { ensureUser } from "./middlewares/ensureUser.js";
 
@@ -29,8 +30,9 @@ app.engine(
 app.set("view engine", "mustache");
 app.set("views", path.join(__dirname, "views"));
 
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+// Security: Limit request sizes to prevent DoS attacks
+app.use(express.urlencoded({ extended: false, limit: "10kb" }));
+app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
 
 app.use("/static", express.static(path.join(__dirname, "public")));
@@ -40,6 +42,7 @@ app.use(ensureUser);
 app.get("/health", (req, res) => res.json({ ok: true }));
 
 app.use("/", viewRoutes);
+app.use("/admin", adminRoutes);
 
 export const not_found = (req, res) =>
   res.status(404).type("text/plain").send("404 Not found.");

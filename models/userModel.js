@@ -1,16 +1,9 @@
 
-// models/userModel.js
-import bcrypt from "bcrypt";
 import { usersDb } from "./_db.js";
 
 export const UserModel = {
   async create(user) {
-    // Create a copy to avoid mutating the original object
     const userToInsert = { ...user };
-    // Hash password if provided
-    if (userToInsert.password) {
-      userToInsert.password = await bcrypt.hash(userToInsert.password, 10);
-    }
     return usersDb.insert(userToInsert);
   },
 
@@ -26,8 +19,16 @@ export const UserModel = {
     return usersDb.findOne({ _id: id });
   },
 
-  async comparePassword(plainPassword, hashedPassword) {
-    return bcrypt.compare(plainPassword, hashedPassword);
+  async list() {
+    return usersDb.find({});
+  },
+
+  async update(id, updates) {
+    return usersDb.update({ _id: id }, { $set: updates });
+  },
+
+  async delete(id) {
+    return usersDb.remove({ _id: id });
   },
 };
 

@@ -1,5 +1,4 @@
 
-// models/bookingModel.js
 import { bookingsDb } from './_db.js';
 
 export const BookingModel = {
@@ -17,4 +16,3 @@ export const BookingModel = {
     return this.findById(id);
   }
 };
-``

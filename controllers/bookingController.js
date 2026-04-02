@@ -2,50 +2,38 @@
 import {
   bookCourseForUser,
   bookSessionForUser,
+  cancelBooking as cancelBookingService,
 } from "../services/bookingService.js";
-import { BookingModel } from "../models/bookingModel.js";
-import { SessionModel } from "../models/sessionModel.js";
 
-export const bookCourse = async (req, res) => {
+export const bookCourse = async (req, res, next) => {
   try {
-    const { userId, courseId } = req.body;
+    const { courseId } = req.body;
+    const userId = req.user._id;
     const booking = await bookCourseForUser(userId, courseId);
     res.status(201).json({ booking });
   } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: err.message });
+    next(err);
   }
 };
 
-export const bookSession = async (req, res) => {
+export const bookSession = async (req, res, next) => {
   try {
-    const { userId, sessionId } = req.body;
+    const { sessionId } = req.body;
+    const userId = req.user._id;
     const booking = await bookSessionForUser(userId, sessionId);
     res.status(201).json({ booking });
   } catch (err) {
-    console.error(err);
-    res
-      .status(err.code === "DROPIN_NOT_ALLOWED" ? 400 : 500)
-      .json({ error: err.message });
+    next(err);
   }
 };
 
-export const cancelBooking = async (req, res) => {
+export const cancelBooking = async (req, res, next) => {
   try {
     const { bookingId } = req.params;
-    const booking = await BookingModel.findById(bookingId);
-    if (!booking) return res.status(404).json({ error: "Booking not found" });
-    if (booking.status === "CANCELLED") return res.json({ booking });
-
-    if (booking.status === "CONFIRMED") {
-      for (const sid of booking.sessionIds) {
-        await SessionModel.incrementBookedCount(sid, -1);
-      }
-    }
-    const updated = await BookingModel.cancel(bookingId);
+    const userId = req.user._id;
+    const updated = await cancelBookingService(bookingId, userId);
     res.json({ booking: updated });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to cancel booking" });
+    next(err);
   }
 };

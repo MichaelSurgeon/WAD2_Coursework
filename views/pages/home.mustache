@@ -2,10 +2,81 @@
 {{> header}}
 
 <main class="wrap">
-  <h1>Upcoming Courses</h1>
-  <section class="cards" aria-label="Featured courses">
-    {{> courseCard}}
-  </section>
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="card" style="margin-top: 2rem; margin-bottom: 2rem;">
+      <div class="card-section">
+        <h1 style="margin: 0 0 1rem 0;">Welcome to Our Yoga Studio</h1>
+        <p style="color: #666; line-height: 1.6; margin: 0;">
+          We are dedicated to providing high-quality, accessible yoga classes for students of all levels. 
+          Our mission is to help you discover the transformative power of yoga through expert instruction, 
+          mindful practice, and a supportive community.
+        </p>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+      <div class="card">
+        <div class="card-section">
+          <h3 style="margin: 0 0 1rem 0;">🧘 Class Levels</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 0.8rem;"><strong>Beginner</strong> – New to yoga? Start here.</li>
+            <li style="margin-bottom: 0.8rem;"><strong>Intermediate</strong> – Build strength and flexibility.</li>
+            <li style="margin: 0;"><strong>Advanced</strong> – Deepen your practice.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-section">
+          <h3 style="margin: 0 0 1rem 0;">📅 Class Formats</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 0.8rem;"><strong>Weekly Blocks</strong> – Multi-week courses.</li>
+            <li style="margin-bottom: 0.8rem;"><strong>Weekend Workshops</strong> – Focused intensive sessions.</li>
+            <li style="margin: 0;"><strong>Drop-In Classes</strong> – Come when it suits you.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-section">
+          <h3 style="margin: 0 0 1rem 0;">✨ Benefits</h3>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 0.8rem;">Improve flexibility & strength</li>
+            <li style="margin-bottom: 0.8rem;">Reduce stress & anxiety</li>
+            <li style="margin: 0;">Join a supportive community</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 2rem;">
+      <div class="card-section">
+        <h2 style="margin: 0 0 1rem 0;">Getting Started</h2>
+        {{^user}}
+        <p style="color: #666; margin: 0;">
+          Browse our complete course catalog below. Each listing includes location, pricing, class schedule, and availability. 
+          <strong><a href="/register" style="color: var(--brand);">Register an account</a></strong> to book classes and secure your spot.
+        </p>
+        {{/user}}
+        {{#user}}
+        <p style="color: #666; margin: 0;">
+          Browse our course catalog below and book the classes that work for your schedule. 
+          You can also view detailed information about each class including location, pricing, and session times.
+        </p>
+        {{/user}}
+      </div>
+    </div>
+
+    <h2 style="margin: 2rem 0 1.5rem 0;">Featured Courses</h2>
+    <section class="cards" aria-label="Featured courses">
+      {{#courses}}{{> courseCard}}{{/courses}}
+      {{^courses}}<p class="empty-message">No courses available yet.</p>{{/courses}}
+    </section>
+
+    <div style="text-align: center; margin-top: 2rem;">
+      <a href="/courses" class="btn btn-primary" style="display: inline-block; padding: 0.8rem 2rem;">View All Courses</a>
+    </div>
+  </div>
 </main>
 
 {{> footer}}
