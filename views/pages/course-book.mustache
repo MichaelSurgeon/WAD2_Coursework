@@ -1,9 +1,9 @@
-
 {{> head}}
 {{> header}}
 
-<article>
-  <h1>Book: {{course.title}}</h1>
+<main class="wrap">
+  <article>
+    <h1>Book: {{course.title}}</h1>
   <p class="muted">
     Level: {{course.level}} • Type: {{course.type}} {{#course.allowDropIn}}• Drop-in available{{/course.allowDropIn}}
   </p>
@@ -21,7 +21,6 @@
   {{/errors}}
 
   <form method="post" action="/courses/{{course.id}}/book">
-    <!-- If you add CSRF later: <input type="hidden" name="_csrf" value="{{csrfToken}}"> -->
     <input type="hidden" name="userId" value="{{user._id}}">
 
     <fieldset>
@@ -44,7 +43,7 @@
 
       <div class="field checkbox">
         <input id="consent" name="consent" type="checkbox" required>
-        <label for="consent">I agree to the studio’s booking terms &amp; health disclaimer.</label>
+        <label for="consent">I agree to the studio's booking terms &amp; health disclaimer.</label>
       </div>
     </fieldset>
 
@@ -64,5 +63,6 @@
     </div>
   </form>
 </article>
+</main>
 
 {{> footer}}

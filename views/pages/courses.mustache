@@ -1,0 +1,53 @@
+{{> head}}
+{{> header}}
+
+<main class="wrap">
+  <h1>Browse Courses</h1>
+  <section class="filters" aria-label="Course filters">
+    <form method="get">
+      <label>
+        <span>Level</span>
+        <select name="level">
+          <option value="" {{^filters.level}}selected{{/filters.level}}>Any</option>
+          <option value="beginner" {{#filters.level}}{{#isBeginner}}selected{{/isBeginner}}{{/filters.level}}>Beginner</option>
+          <option value="intermediate" {{#filters.level}}{{#isIntermediate}}selected{{/isIntermediate}}{{/filters.level}}>Intermediate</option>
+          <option value="advanced" {{#filters.level}}{{#isAdvanced}}selected{{/isAdvanced}}{{/filters.level}}>Advanced</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Type</span>
+        <select name="type">
+          <option value="" {{^filters.type}}selected{{/filters.type}}>Any</option>
+          <option value="WEEKLY_BLOCK" {{#filters.type}}{{#isWeekly}}selected{{/isWeekly}}{{/filters.type}}>Weekly Block</option>
+          <option value="WEEKEND_WORKSHOP" {{#filters.type}}{{#isWeekend}}selected{{/isWeekend}}{{/filters.type}}>Weekend Workshop</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Drop-in</span>
+        <select name="dropin">
+          <option value="" {{^filters.dropin}}selected{{/filters.dropin}}>Any</option>
+          <option value="yes" {{#filters.dropin}}{{#isYes}}selected{{/isYes}}{{/filters.dropin}}>Yes</option>
+          <option value="no" {{#filters.dropin}}{{#isNo}}selected{{/isNo}}{{/filters.dropin}}>No</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Search</span>
+        <input type="search" name="q" value="{{filters.q}}" placeholder="Title or description" />
+      </label>
+
+      <div class="actions">
+        <button class="btn primary" type="submit">Apply Filters</button>
+        <a href="/courses" class="btn">Reset</a>
+      </div>
+    </form>
+  </section>
+
+  <section class="cards" aria-label="Course results">
+    {{> courseCard}}
+  </section>
+</main>
+
+{{> footer}}

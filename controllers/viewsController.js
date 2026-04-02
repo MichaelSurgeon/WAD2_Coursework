@@ -29,7 +29,7 @@ export const homePage = async (req, res, next) => {
         };
       })
     );
-    res.render("home", {
+    res.render("pages/home", {
       title: "Yoga Courses",
       user: req.user,
       courses: cards,
@@ -46,7 +46,7 @@ export const courseDetailPage = async (req, res, next) => {
     if (!course)
       return res
         .status(404)
-        .render("error", { title: "Not found", message: "Course not found" });
+        .render("pages/error", { title: "Not found", message: "Course not found" });
 
     const sessions = await SessionModel.listByCourse(courseId);
     const rows = sessions.map((s) => ({
@@ -58,9 +58,11 @@ export const courseDetailPage = async (req, res, next) => {
       booked: s.bookedCount ?? 0,
       remaining: Math.max(0, (s.capacity ?? 0) - (s.bookedCount ?? 0)),
       isFull: (s.bookedCount ?? 0) >= (s.capacity ?? 0),
+      startIso: s.startDateTime,
+      endIso: s.endDateTime,
     }));
 
-    res.render("course", {
+    res.render("pages/course", {
       title: course.title,
       user: req.user,
       course: {
@@ -88,7 +90,7 @@ export const postBookCourse = async (req, res, next) => {
   } catch (err) {
     res
       .status(400)
-      .render("error", { title: "Booking failed", message: err.message });
+      .render("pages/error", { title: "Booking failed", message: err.message });
   }
 };
 
@@ -102,7 +104,7 @@ export const postBookSession = async (req, res, next) => {
       err.code === "DROPIN_NOT_ALLOWED"
         ? "Drop-ins are not allowed for this course."
         : err.message;
-    res.status(400).render("error", { title: "Booking failed", message });
+    res.status(400).render("pages/error", { title: "Booking failed", message });
   }
 };
 
@@ -113,9 +115,9 @@ export const bookingConfirmationPage = async (req, res, next) => {
     if (!booking)
       return res
         .status(404)
-        .render("error", { title: "Not found", message: "Booking not found" });
+        .render("pages/error", { title: "Not found", message: "Booking not found" });
 
-    res.render("booking_confirmation", {
+    res.render("pages/booking-confirmation", {
       title: "Booking confirmation",
       user: req.user,
       booking: {

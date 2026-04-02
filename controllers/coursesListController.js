@@ -87,7 +87,7 @@ export const coursesListPage = async (req, res, next) => {
       nextLink: p < totalPages ? buildLink(req, p + 1, ps) : null,
     };
 
-    res.render("courses", {
+    res.render("pages/courses", {
       title: "Courses",
       user: req.user,
       filters: {

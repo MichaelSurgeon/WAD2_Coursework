@@ -1,0 +1,20 @@
+{{#sessions}}
+<tr>
+  <td><time datetime="{{startIso}}">{{start}}</time></td>
+  <td><time datetime="{{endIso}}">{{end}}</time></td>
+  <td>{{capacity}}</td>
+  <td>{{booked}}</td>
+  <td>{{remaining}}</td>
+  <td>
+    {{#course.allowDropIn}}
+    <form action="/sessions/{{_id}}/book" method="post">
+      <input type="hidden" name="userId" value="{{../../user._id}}">
+      <button class="btn" type="submit" {{#isFull}}disabled aria-disabled="true"{{/isFull}}>{{#isFull}}Full{{/isFull}}{{^isFull}}Book this session{{/isFull}}</button>
+    </form>
+    {{/course.allowDropIn}}
+    {{^course.allowDropIn}}
+      <span class="muted">Drop-ins disabled</span>
+    {{/course.allowDropIn}}
+  </td>
+</tr>
+{{/sessions}}

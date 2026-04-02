@@ -1,11 +1,14 @@
 <header class="site-header">
   <div class="wrap">
-    🧘 Yoga Studio
-    <nav>
-      <a> hrefs</a>
+    <a href="/" class="logo" aria-label="Yoga Studio Home">🧘 Yoga Studio</a>
+    <nav aria-label="Main navigation">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/courses">Courses</a></li>
+      </ul>
     </nav>
     {{#user}}
-    <div class="user">
+    <div class="user" aria-live="polite">
       Signed in as <strong>{{ name }}</strong>
     </div>
     {{/user}}
