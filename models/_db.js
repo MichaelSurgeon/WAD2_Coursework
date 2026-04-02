@@ -32,5 +32,6 @@ export async function initDb() {
   await fs.mkdir(dbDir, { recursive: true });
   // Ensure helpful indexes are ready before we insert
   await usersDb.ensureIndex({ fieldName: "email", unique: true });
+  await usersDb.ensureIndex({ fieldName: "username", unique: true, sparse: true });
   await sessionsDb.ensureIndex({ fieldName: "courseId" });
 }

@@ -41,6 +41,28 @@ async function ensureDemoStudent() {
   return student;
 }
 
+async function createAuthUsers() {
+  // Create organiser user
+  const admin = await UserModel.create({
+    username: "admin",
+    password: "admin",
+    name: "Admin User",
+    email: "admin@yoga.local",
+    role: "organiser",
+  });
+
+  // Create regular user
+  const user = await UserModel.create({
+    username: "user",
+    password: "user",
+    name: "Regular User",
+    email: "user@yoga.local",
+    role: "user",
+  });
+
+  return { admin, user };
+}
+
 async function createWeekendWorkshop() {
   const instructor = await UserModel.create({
     name: "Ava",
@@ -144,6 +166,9 @@ async function run() {
   console.log("Creating demo student…");
   const student = await ensureDemoStudent();
 
+  console.log("Creating auth users…");
+  const authUsers = await createAuthUsers();
+
   console.log("Creating weekend workshop…");
   const w = await createWeekendWorkshop();
 
@@ -154,6 +179,8 @@ async function run() {
 
   console.log("\n✅ Seed complete.");
   console.log("Student ID           :", student._id);
+  console.log("Organiser (admin)    :", authUsers.admin.username, "/", authUsers.admin.password);
+  console.log("Regular user         :", authUsers.user.username, "/", authUsers.user.password);
   console.log(
     "Workshop course ID   :",
     w.course._id,
