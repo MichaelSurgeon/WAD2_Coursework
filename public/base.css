@@ -1,0 +1,168 @@
+/* Global CSS Variables */
+:root {
+    --ink: #222;
+    --muted: #666;
+    --bg: #fff;
+    --brand: #3b82f6;
+    --line: #eee;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font: 16px/1.5 system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+}
+
+main {
+    margin-top: 1rem;
+    padding-bottom: 2rem;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    line-height: 1.3;
+}
+
+p {
+    margin: 0.5rem 0;
+}
+
+a {
+    color: var(--brand);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+code {
+    background: #f0f0f0;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: monospace;
+}
+
+/* Form Elements */
+input[type="text"],
+input[type="email"],
+input[type="search"],
+input[type="checkbox"],
+textarea,
+select {
+    font-family: inherit;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+fieldset {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+legend {
+    font-weight: 600;
+    padding: 0 0.5rem;
+}
+
+/* Container */
+.wrap {
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Header & Footer */
+.site-header,
+.site-footer {
+    background: #fafafa;
+    border-bottom: 1px solid var(--line);
+}
+
+.site-header .wrap {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.site-header .logo {
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.site-footer {
+    border-top: 1px solid var(--line);
+    border-bottom: none;
+    margin-top: 1rem;
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+}
+
+.site-footer p {
+    margin: 0.25rem 0;
+}
+
+/* Navigation */
+nav {
+    display: flex;
+    gap: 1rem;
+}
+
+nav ul {
+    display: flex;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav a {
+    color: var(--ink);
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+    display: block;
+}
+
+nav a:hover {
+    background: #eee;
+}
+
+.user {
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+/* Utility Classes */
+.muted {
+    color: var(--muted);
+}
+
+.kv {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.25rem 1rem;
+}

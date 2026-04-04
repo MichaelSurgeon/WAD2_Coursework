@@ -45,10 +45,19 @@ app.use("/", viewRoutes);
 app.use("/admin", adminRoutes);
 
 export const not_found = (req, res) =>
-  res.status(404).type("text/plain").send("404 Not found.");
+  res.status(404).render("pages/error", {
+    title: "Page Not Found",
+    message: "The page you're looking for doesn't exist.",
+  });
+
+// eslint-disable-next-line no-unused-vars
 export const server_error = (err, req, res, next) => {
   console.error(err);
-  res.status(500).type("text/plain").send("Internal Server Error.");
+  const isDev = process.env.NODE_ENV !== "production";
+  res.status(500).render("pages/error", {
+    title: "Server Error",
+    message: isDev ? err.message : "An error occurred. Please try again later.",
+  });
 };
 app.use(not_found);
 app.use(server_error);

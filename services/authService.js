@@ -40,12 +40,10 @@ export const AuthService = {
     },
 
     async createUser(username, email, password) {
-        const hashedPassword = await bcrypt.hash(password, 10);
-
         return UserModel.create({
             username,
             email,
-            password: hashedPassword,
+            password,
             role: "student",
         });
     },

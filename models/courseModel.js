@@ -2,20 +2,20 @@ import { coursesDb } from "./_db.js";
 
 export const CourseModel = {
   async create(course) {
-    return coursesDb.insert(course);
+    return await coursesDb.insert(course);
   },
   async findById(id) {
-    return coursesDb.findOne({ _id: id });
+    return await coursesDb.findOne({ _id: id });
   },
   async list(filter = {}) {
-    return coursesDb.find(filter);
+    return await coursesDb.find(filter);
   },
   async update(id, patch) {
     await coursesDb.update({ _id: id }, { $set: patch });
-    return this.findById(id);
+    return await this.findById(id);
   },
 
   async delete(id) {
-    return coursesDb.remove({ _id: id });
+    return await coursesDb.remove({ _id: id });
   },
 };

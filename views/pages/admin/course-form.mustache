@@ -2,89 +2,85 @@
 {{> header}}
 
 <main class="wrap">
-  <div class="card" style="max-width: 700px; margin: 2rem auto;">
+  <div class="card container">
     <div class="card-header">
-      <h1 style="margin: 0;">{{title}}</h1>
+      <h1 class="m-0">{{title}}</h1>
     </div>
 
-    {{#errors}}
-    <div class="card-section" style="background-color: #fee; border-color: #c33; border-left: 4px solid #c33;">
-      <strong style="color: #933;">Please fix the following:</strong>
-      <ul style="margin: 0.5rem 0 0 0; color: #933;">
-        {{#list}}
-        <li>{{.}}</li>
-        {{/list}}
-      </ul>
-    </div>
-    {{/errors}}
+    {{> errorAlert}}
 
     <form method="post" action="{{#isEdit}}/admin/courses/{{course.id}}/edit{{/isEdit}}{{^isEdit}}/admin/courses{{/isEdit}}">
       <div class="card-section">
-        <h3 style="margin: 0 0 1.5rem 0; color: #333;">Course Details</h3>
+        <h3 class="form-section-title">Course Details</h3>
 
         <div class="field">
-          <label for="title" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Course Title <span style="color: #c33;">*</span></label>
-          <input id="title" name="title" type="text" required value="{{course.title}}" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
+          <label for="title" class="form-field-label">Course Title <span>*</span></label>
+          <input id="title" name="title" type="text" required value="{{course.title}}" class="form-field-input">
         </div>
 
-        <div class="field" style="margin-top: 1.5rem;">
-          <label for="description" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Description</label>
-          <textarea id="description" name="description" rows="4" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; font-family: inherit;">{{course.description}}</textarea>
+        <div class="field form-field">
+          <label for="description" class="form-field-label">Description</label>
+          <textarea id="description" name="description" rows="4" class="form-field-textarea">{{course.description}}</textarea>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem;">
+        <div class="grid-2-cols m-top-1-5">
           <div>
-            <label for="level" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Level <span style="color: #c33;">*</span></label>
-            <select id="level" name="level" required style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
+            <label for="level" class="form-field-label">Level <span>*</span></label>
+            <select id="level" name="level" required class="form-field-select">
               <option value="">Select level</option>
-              <option value="beginner" {{#course.level}}{{#isBeginner}}selected{{/isBeginner}}{{/course.level}}>Beginner</option>
-              <option value="intermediate" {{#course.level}}{{#isIntermediate}}selected{{/isIntermediate}}{{/course.level}}>Intermediate</option>
-              <option value="advanced" {{#course.level}}{{#isAdvanced}}selected{{/isAdvanced}}{{/course.level}}>Advanced</option>
+              <option value="beginner" {{#beginner}}selected{{/beginner}}>Beginner</option>
+              <option value="intermediate" {{#intermediate}}selected{{/intermediate}}>Intermediate</option>
+              <option value="advanced" {{#advanced}}selected{{/advanced}}>Advanced</option>
             </select>
           </div>
 
           <div>
-            <label for="type" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Type <span style="color: #c33;">*</span></label>
-            <select id="type" name="type" required style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
+            <label for="type" class="form-field-label">Type <span>*</span></label>
+            <select id="type" name="type" required class="form-field-select">
               <option value="">Select type</option>
-              <option value="WEEKLY_BLOCK" {{#course.type}}{{#isWeekly}}selected{{/isWeekly}}{{/course.type}}>Weekly Block</option>
-              <option value="WEEKEND_WORKSHOP" {{#course.type}}{{#isWeekend}}selected{{/isWeekend}}{{/course.type}}>Weekend Workshop</option>
+              <option value="WEEKLY_BLOCK" {{#block}}selected{{/block}}>Weekly Block</option>
+              <option value="WEEKEND_WORKSHOP" {{#workshop}}selected{{/workshop}}>Weekend Workshop</option>
             </select>
           </div>
         </div>
 
-        <div class="field" style="margin-top: 1.5rem;">
-          <label for="location" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Location</label>
-          <input id="location" name="location" type="text" value="{{course.location}}" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
+        <div class="field form-field">
+          <label for="location" class="form-field-label">Location</label>
+          <input id="location" name="location" type="text" value="{{course.location}}" class="form-field-input">
         </div>
 
-        <div class="field" style="margin-top: 1.5rem;">
-          <label for="price" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Price (£)</label>
-          <input id="price" name="price" type="number" step="0.01" value="{{course.price}}" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
+        <div class="field form-field">
+          <label for="price" class="form-field-label">Price (£)</label>
+          <input id="price" name="price" type="number" step="0.01" value="{{course.price}}" class="form-field-input">
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem;">
+        <div class="grid-2-cols m-top-1-5">
           <div>
-            <label for="startDate" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Start Date</label>
-            <input id="startDate" name="startDate" type="date" value="{{course.startDate}}" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
+            <label for="startDate" class="form-field-label">Start Date</label>
+            <input id="startDate" name="startDate" type="date" value="{{course.startDate}}" class="form-field-input">
           </div>
 
           <div>
-            <label for="endDate" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">End Date</label>
-            <input id="endDate" name="endDate" type="date" value="{{course.endDate}}" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
+            <label for="endDate" class="form-field-label">End Date</label>
+            <input id="endDate" name="endDate" type="date" value="{{course.endDate}}" class="form-field-input">
           </div>
         </div>
 
-        <div class="field" style="margin-top: 1.5rem; display: flex; align-items: center; gap: 0.8rem;">
-          <input id="allowDropIn" name="allowDropIn" type="checkbox" {{#course.allowDropIn}}checked{{/course.allowDropIn}} style="cursor: pointer;">
-          <label for="allowDropIn" style="cursor: pointer; margin: 0;">Allow drop-in bookings</label>
+        <div class="form-field-checkbox">
+          <input id="allowDropIn" name="allowDropIn" type="checkbox" {{#course.allowDropIn}}checked{{/course.allowDropIn}}>
+          <label for="allowDropIn">Allow drop-in bookings</label>
         </div>
       </div>
 
       <div class="card-action">
-        <div style="display: flex; gap: 1rem; justify-content: center;">
-          <button class="btn btn-primary" type="submit" style="flex: 1;">Save Course</button>
-          <a href="/admin/courses" class="btn" style="flex: 1; text-align: center; padding: 0.7rem 1rem; background-color: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; border: 1px solid #ddd;">Cancel</a>
+        <div class="button-container-full-flex">
+          {{#isEdit}}
+          <button class="btn btn-primary" type="submit">Save & Manage Sessions</button>
+          {{/isEdit}}
+          {{^isEdit}}
+          <button class="btn btn-primary" type="submit">Next</button>
+          {{/isEdit}}
+          <a href="/admin/courses" class="btn btn-delete">Cancel</a>
         </div>
       </div>
     </form>

@@ -2,17 +2,19 @@
 {{> header}}
 
 <main class="wrap">
-  <div class="card" style="max-width: 500px; margin: 3rem auto; border-left: 4px solid #c33;">
-    <div class="card-header" style="background-color: #fee; border-bottom: 2px solid #c33;">
-      <h1 style="margin: 0; color: #933;">{{title}}</h1>
-    </div>
+  <div class="container-sm">
+    <div class="card card-error">
+      <div class="card-header card-header-error">
+        <h1>{{title}}</h1>
+      </div>
 
-    <div class="card-section">
-      <p style="color: #666; font-size: 1.05rem; margin: 0;">{{message}}</p>
-    </div>
+      <div class="card-section">
+        <p class="card-message">{{message}}</p>
+      </div>
 
-    <div class="card-action">
-      <a href="/" class="btn btn-primary" style="display: inline-block; padding: 0.7rem 2rem;">Return Home</a>
+      <div class="card-action">
+        <a href="/" class="btn btn-primary">Return Home</a>
+      </div>
     </div>
   </div>
 </main>

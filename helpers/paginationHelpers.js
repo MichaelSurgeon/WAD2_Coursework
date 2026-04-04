@@ -1,13 +1,8 @@
 import { URLSearchParams } from "url";
 
-export const calculatePagination = (total, pageSize) => {
-    return {
-        total,
-        totalPages: Math.ceil(total / pageSize) || 1,
-    };
-};
-
 export const buildPaginationObject = (page, pageSize, total, totalPages) => {
+    const startItem = (page - 1) * pageSize + 1;
+    const endItem = Math.min(page * pageSize, total);
     return {
         page,
         pageSize,
@@ -15,6 +10,8 @@ export const buildPaginationObject = (page, pageSize, total, totalPages) => {
         totalPages,
         hasPrev: page > 1,
         hasNext: page < totalPages,
+        startItem,
+        endItem,
     };
 };
 
@@ -26,8 +23,24 @@ export const buildLink = (req, page, pageSize) => {
     return `${basePath}?${params.toString()}`;
 };
 
-export const parsePaginationParams = (page = "1", pageSize = "10") => {
+export const parsePaginationParams = (page = "1", pageSize = "4") => {
     const p = Math.max(1, parseInt(page, 10) || 1);
-    const ps = Math.max(1, parseInt(pageSize, 10) || 10);
+    const ps = Math.max(1, parseInt(pageSize, 10) || 4);
     return { p, ps };
+};
+
+export const paginateCourses = (courses, page, pageSize, req) => {
+    const { p, ps } = parsePaginationParams(page, pageSize);
+    const total = courses.length;
+    const totalPages = Math.ceil(total / ps) || 1;
+    const pageItems = courses.slice((p - 1) * ps, p * ps);
+
+    return {
+        pageItems,
+        pagination: {
+            ...buildPaginationObject(p, ps, total, totalPages),
+            prevLink: p > 1 ? buildLink(req, p - 1, ps) : null,
+            nextLink: p < totalPages ? buildLink(req, p + 1, ps) : null,
+        },
+    };
 };

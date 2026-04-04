@@ -1,5 +1,4 @@
 // seed/seed.js
-import bcrypt from "bcrypt";
 import {
   initDb,
   usersDb,
@@ -14,14 +13,13 @@ import { UserModel } from "../models/userModel.js";
 const iso = (d) => new Date(d).toISOString();
 
 async function wipeAll() {
-  // Remove all documents to guarantee a clean seed
   await Promise.all([
     usersDb.remove({}, { multi: true }),
     coursesDb.remove({}, { multi: true }),
     sessionsDb.remove({}, { multi: true }),
     bookingsDb.remove({}, { multi: true }),
   ]);
-  // Compact files so you’re not looking at stale data on disk
+
   await Promise.all([
     usersDb.persistence.compactDatafile(),
     coursesDb.persistence.compactDatafile(),
@@ -43,21 +41,18 @@ async function ensureDemoStudent() {
 }
 
 async function createAuthUsers() {
-  // Create organiser user with hashed password
-  const hashedAdminPassword = await bcrypt.hash("admin", 10);
+  // UserModel.create handles password hashing
   const admin = await UserModel.create({
     username: "admin",
-    password: hashedAdminPassword,
+    password: "admin",
     name: "Admin User",
     email: "admin@yoga.local",
     role: "organiser",
   });
 
-  // Create regular user with hashed password
-  const hashedUserPassword = await bcrypt.hash("user", 10);
   const user = await UserModel.create({
     username: "user",
-    password: hashedUserPassword,
+    password: "user",
     name: "Regular User",
     email: "user@yoga.local",
     role: "student",

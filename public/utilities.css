@@ -1,0 +1,434 @@
+/* Text Utilities */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-muted {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.empty-state-message {
+    font-size: 1.05rem;
+    margin: 2rem 0;
+}
+
+.text-error {
+    color: #c33;
+}
+
+/* Margin Utilities - Essential sizes only */
+.m-0 {
+    margin: 0;
+}
+
+.m-top-1 {
+    margin-top: 1rem;
+}
+
+.m-top-2 {
+    margin-top: 2rem;
+}
+
+.m-bottom-1 {
+    margin-bottom: 1rem;
+}
+
+.m-bottom-2 {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.m-left-1 {
+    margin-left: 0.5rem;
+}
+
+/* Form Field Utilities */
+.form-field {
+    margin-bottom: 1.5rem;
+}
+
+.form-field-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-field-label span {
+    color: #dc2626;
+}
+
+.form-field-input,
+.form-field-select,
+.form-field-textarea {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-field-textarea {
+    font-family: inherit;
+}
+
+.form-field-required span {
+    color: #c33;
+}
+
+.form-field-checkbox {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.form-field-checkbox input {
+    cursor: pointer;
+}
+
+.form-field-checkbox label {
+    cursor: pointer;
+    margin: 0;
+}
+
+.form-section-title {
+    margin: 0 0 1.5rem 0;
+    color: #333;
+}
+
+/* Admin Form Grid */
+.admin-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-section-title {
+    margin: 0 0 1.5rem 0;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+/* Page Container Utilities */
+.page-container {
+    max-width: 900px;
+    margin: 2rem auto;
+}
+
+.page-header {
+    margin-bottom: 2rem;
+}
+
+.page-header .card-header {
+    margin: 0;
+    padding: 1.25rem;
+}
+
+.page-header-title {
+    margin: 0;
+}
+
+.page-header-subtitle {
+    margin: 0.5rem 0 0 0;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.card-section-padding {
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+/* Info Sections */
+.info-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* State Sections */
+.section-error {
+    background-color: #fee;
+    border-left: 4px solid #c33;
+    padding: 1rem;
+    border-radius: 4px;
+}
+
+.section-error strong,
+.section-error p {
+    color: #933;
+}
+
+.section-error ul {
+    margin: 0.5rem 0 0 0;
+    color: #933;
+}
+
+.section-info-blue {
+    background-color: #f0f8ff;
+    border-left: 4px solid var(--brand);
+    padding: 1rem;
+    text-align: center;
+    border-radius: 4px;
+}
+
+.section-info-blue p {
+    margin: 0;
+    color: #333;
+}
+
+.section-info-blue a {
+    color: var(--brand);
+    font-weight: 600;
+}
+
+.section-center-bg {
+    text-align: center;
+    background-color: #fafafa;
+    padding: 2rem 1rem;
+    border-radius: 8px;
+}
+
+/* Course Card Display */
+.courses-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.course-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.course-card-title {
+    margin: 0 0 0.5rem 0;
+}
+
+.course-card-meta {
+    display: flex;
+    gap: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.course-card-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.course-card-sessions {
+    color: #999;
+    font-size: 0.85rem;
+    text-align: right;
+}
+
+/* Button Container Styling */
+.button-container {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+}
+
+.button-container-full-flex {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+}
+
+.button-container-full-flex form {
+    display: flex;
+}
+
+.button-container-full-flex form button {
+    padding: 0.4rem 0.8rem;
+}
+
+/* Button Sizing Utilities */
+.btn-full-width {
+    width: 100%;
+}
+
+.btn-flex-full {
+    flex: 1;
+}
+
+.btn-inline-block {
+    display: inline-block;
+}
+
+.btn-block {
+    display: block;
+}
+
+/* Stat Cards */
+.stat-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Stat Cards */
+.stat-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 2rem;
+    background: #fafafa;
+    text-align: center;
+}
+
+.stat-card h3 {
+    font-size: 2.5rem;
+    margin: 0.5rem 0;
+    color: var(--brand);
+}
+
+.stat-card p {
+    margin: 0 0 1rem 0;
+    color: var(--muted);
+}
+
+.stat-card-content {
+    text-align: center;
+}
+
+.stat-card-label {
+    color: #999;
+    font-size: 0.85rem;
+    margin: 0 0 0.5rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.stat-card-number {
+    margin: 0;
+    font-size: 2.5rem;
+    color: var(--brand);
+}
+
+/* User List */
+.user-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+.user-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-info h3 {
+    margin: 0;
+}
+
+.user-info p {
+    margin: 0.5rem 0 0 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.user-role-badge {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.user-role-badge-organiser {
+    background-color: var(--brand);
+    color: white;
+}
+
+.user-role-badge-user {
+    background-color: #e0e0e0;
+    color: #666;
+}
+
+/* Back Link */
+.back-link {
+    margin-top: 2rem;
+}
+
+.back-link a {
+    color: var(--brand);
+    text-decoration: none;
+}
+
+/* Home Page Content */
+.home-content-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.featured-courses-heading {
+    margin: 2rem 0 1.5rem 0;
+}
+
+/* Filter/Search Form */
+.filter-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.filter-form-search {
+    margin-bottom: 1.5rem;
+}
+
+.filter-form-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.filter-form-actions .btn {
+    flex: 1;
+}
+
+/* Action Groups */
+.actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/* Pagination Controls */
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #fafafa;
+    border-radius: 8px;
+}
+
+.pagination-info {
+    color: #666;
+    font-size: 0.95rem;
+    font-weight: 500;
+}

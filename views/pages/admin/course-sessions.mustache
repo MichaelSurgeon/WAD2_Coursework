@@ -1,0 +1,95 @@
+{{> head}}
+{{> header}}
+
+<main class="wrap">
+  <div class="card container">
+    <div class="card-header">
+      <h1>Add Sessions: {{course.title}}</h1>
+      <p>{{course.startDate}} – {{course.endDate}}</p>
+    </div>
+
+    {{> errorAlert}}
+
+    {{^sessionsList}}
+    <div class="card-section card-section-info">
+      <strong>Add at least one session before completing course creation</strong>
+      <p>Each course requires at least one session (class/meeting time) for students to book.</p>
+    </div>
+    {{/sessionsList}}
+
+    <form method="post" action="/admin/courses/{{course.id}}/sessions">
+      <div class="card-section form-section">
+        <h3>Add New Session</h3>
+
+        <div class="admin-form-grid">
+          <div class="field">
+            <label for="startDateTime" class="form-field-label">Start Date & Time <span>*</span></label>
+            <input id="startDateTime" name="startDateTime" type="datetime-local" required class="form-field-input">
+          </div>
+
+          <div class="field">
+            <label for="endDateTime" class="form-field-label">End Date & Time <span>*</span></label>
+            <input id="endDateTime" name="endDateTime" type="datetime-local" required class="form-field-input">
+          </div>
+
+          <div class="field">
+            <label for="capacity" class="form-field-label">Capacity <span>*</span></label>
+            <input id="capacity" name="capacity" type="number" min="1" required value="18" class="form-field-input">
+          </div>
+        </div>
+      </div>
+
+      <div class="card-action">
+        <div class="admin-btn-group">
+          <button class="btn btn-primary" type="submit">Add Session</button>
+        </div>
+      </div>
+    </form>
+
+    {{#sessionsList}}
+    <div class="card-section">
+      <h3 class="session-count-title">Sessions Added ({{count}})</h3>
+      <div class="session-count-info">
+        <p>You can see added sessions below</p>
+        <p class="warning">Deleting the last session will remove the entire course.</p>
+      </div>
+      
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Date & Time</th>
+              <th class="text-center">Capacity</th>
+              <th class="text-center">Location</th>
+              <th class="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#items}}
+            <tr>
+              <td>{{start}}</td>
+              <td class="text-center">{{capacity}}</td>
+              <td class="text-center">{{location}}</td>
+              <td class="text-center">
+                <form method="post" action="/admin/courses/{{courseId}}/sessions/{{_id}}/delete" class="delete-form">
+                  <button class="btn btn-delete" type="submit">Delete</button>
+                </form>
+              </td>
+            </tr>
+            {{/items}}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card-action">
+        <div class="button-container-full-flex">
+          <a href="/admin/courses" class="btn btn-primary">All Done</a>
+          <a href="/admin/courses/{{course.id}}/edit" class="btn btn-secondary">Edit Course</a>
+        </div>
+      </div>
+    </div>
+    {{/sessionsList}}
+  </div>
+</main>
+
+{{> footer}}

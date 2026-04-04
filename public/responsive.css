@@ -1,0 +1,242 @@
+@media (max-width: 768px) {
+
+    /* Navigation */
+    .site-header .wrap {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0.75rem;
+    }
+
+    nav {
+        width: 100%;
+    }
+
+    nav ul {
+        flex-direction: column;
+        width: 100%;
+        gap: 0;
+    }
+
+    nav a {
+        padding: 0.6rem 0.5rem;
+        font-size: 0.95rem;
+        border-radius: 0;
+    }
+
+    .user {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .user a {
+        padding: 0.6rem 0.5rem;
+    }
+
+    /* Grids */
+    .grid-2-cols,
+    .info-section,
+    .cards,
+    .home-content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Admin Form Grid */
+    .admin-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Filter Form */
+    .filters form {
+        grid-template-columns: 1fr;
+    }
+
+    .filters .actions {
+        grid-column: 1;
+    }
+
+    /* Containers */
+    .container,
+    .container-sm,
+    .container-lg {
+        max-width: 95%;
+        margin: 2rem auto;
+    }
+
+    /* Tables */
+    .table {
+        font-size: 0.8rem;
+    }
+
+    .table th,
+    .table td {
+        padding: 0.5rem;
+    }
+
+    /* Home Grid */
+    .home-content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Stats Grid */
+    .stat-card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* User List */
+    .user-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    /* Courses Grid */
+    .courses-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .course-card-info {
+        grid-template-columns: 1fr;
+    }
+
+    /* Course Card Header */
+    .course-card-header {
+        flex-direction: column;
+    }
+
+    .course-card-sessions {
+        text-align: left;
+    }
+
+    /* Button Containers */
+    .button-container-full-flex {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .button-container-full-flex form {
+        flex: unset;
+    }
+
+    .button-container-full-flex form button {
+        width: 100%;
+    }
+
+    /* Flex Utilities */
+    .flex-row {
+        flex-direction: column;
+    }
+
+    /* Filter Form Actions */
+    .filter-form-actions {
+        flex-direction: column;
+    }
+
+    .filter-form-actions .btn {
+        flex: unset;
+        width: 100%;
+    }
+
+    /* Pagination Controls */
+    .pagination-controls {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .pagination-controls .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+
+    /* Smaller text on tiny screens */
+    body {
+        font-size: 14px;
+    }
+
+    /* Grids */
+    .cards,
+    .home-content-grid,
+    .grid-2-cols,
+    .info-section {
+        grid-template-columns: 1fr;
+    }
+
+    /* Card padding */
+    .card-header,
+    .card-section,
+    .card-action {
+        padding: 0.75rem;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 0.4rem 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-primary,
+    .btn-delete,
+    .btn-secondary {
+        padding: 0.6rem 0.8rem;
+    }
+
+    /* Tables */
+    .table {
+        font-size: 0.75rem;
+    }
+
+    .table th,
+    .table td {
+        padding: 0.3rem;
+    }
+
+    /* Form inputs */
+    .form-field-input,
+    .form-field-select,
+    .form-field-textarea {
+        padding: 0.4rem;
+        font-size: 0.95rem;
+    }
+
+    /* Page header */
+    .page-header-subtitle {
+        font-size: 0.85rem;
+    }
+
+    /* Margins */
+    .m-top-2,
+    .m-bottom-2 {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Stat card font */
+    .stat-card-number {
+        font-size: 2rem;
+    }
+
+    /* Card gaps */
+    .flex-column,
+    .grid-2-cols,
+    .grid-full {
+        gap: 0.5rem;
+    }
+
+    /* Pagination Controls */
+    .pagination-controls {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+
+    .pagination-controls .btn {
+        width: 100%;
+        font-size: 0.9rem;
+    }
+
+    .pagination-info {
+        font-size: 0.85rem;
+    }
+}

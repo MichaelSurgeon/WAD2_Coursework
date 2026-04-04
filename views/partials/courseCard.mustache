@@ -1,13 +1,13 @@
 <article class="card">
   <div class="card-header">
     <h2><a href="/courses/{{id}}">{{title}}</a></h2>
-    <span class="card-level">{{level}}</span>
-    {{#allowDropIn}}<span class="badge-dropin">Drop-in Available</span>{{/allowDropIn}}
-    {{^allowDropIn}}<span class="badge-fullcourse">Full Course Only</span>{{/allowDropIn}}
+    <span class="badge badge-muted">{{level}}</span>
+    {{#allowDropIn}}<span class="badge badge-primary">Drop-in Available</span>{{/allowDropIn}}
+    {{^allowDropIn}}<span class="badge badge-warning">Full Course Only</span>{{/allowDropIn}}
   </div>
 
   <div class="card-section">
-    <div class="info-row">
+    <div class="grid-2-cols">
       <div class="info-box">
         <div class="info-label">📍 Location</div>
         <div class="info-value">{{location}}</div>
@@ -27,20 +27,20 @@
     <div class="session-meta">
       <div class="meta-item">
         <span class="meta-label">Type</span>
-        <span class="badge-metadata-type">{{type}}</span>
+        <span class="badge badge-neutral">{{type}}</span>
       </div>
       <div class="meta-item">
         <span class="meta-label">Duration</span>
-        <span class="badge-metadata-duration">{{durationDisplay}}</span>
+        <span class="badge badge-neutral">{{durationDisplay}}</span>
       </div>
       <div class="meta-item">
         <span class="meta-label">Sessions</span>
-        <span class="badge-metadata-sessions">{{sessionsCount}} sessions</span>
+        <span class="badge badge-neutral">{{sessionsCount}} sessions</span>
       </div>
     </div>
   </div>
 
   <div class="card-action">
-    <a href="/courses/{{id}}" class="btn btn-primary">View Details</a>
+    <a href="/courses/{{id}}" class="btn btn-info">View Details</a>
   </div>
 </article>

@@ -1,0 +1,15 @@
+{{#error}}
+<div class="card-section section-error">
+  <p class="m-0"><strong>Error:</strong> {{error}}</p>
+</div>
+{{/error}}
+{{#errors}}
+<div class="card-section card-section-error">
+  <strong>Please fix the following:</strong>
+  <ul>
+    {{#list}}
+    <li>{{.}}</li>
+    {{/list}}
+  </ul>
+</div>
+{{/errors}}

@@ -109,7 +109,6 @@ export const ValidationService = {
     },
 
     isValidEmail(email) {
-        // Simple email validation
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email);
     },

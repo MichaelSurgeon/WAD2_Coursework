@@ -4,25 +4,14 @@
 <main class="wrap">
   <div class="card" style="max-width: 700px; margin: 2rem auto;">
     <div class="card-header">
-      <h1 style="margin: 0;">Confirm Session Booking</h1>
-      <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">
-        {{session.courseName}}
-      </p>
+      <h1>Confirm Session Booking</h1>
+      <p class="page-header-subtitle">{{session.courseName}}</p>
     </div>
 
-    {{#errors}}
-    <div class="card-section" style="background-color: #fee; border-color: #c33; border-left: 4px solid #c33;">
-      <strong style="color: #933;">Please fix the following:</strong>
-      <ul style="margin: 0.5rem 0 0 0; color: #933;">
-        {{#list}}
-        <li>{{.}}</li>
-        {{/list}}
-      </ul>
-    </div>
-    {{/errors}}
+    {{> errorAlert}}
 
     <div class="card-section">
-      <h3 style="margin: 0 0 1rem 0; color: #333;">Session Information</h3>
+      <h3>Session Information</h3>
       <p style="color: #666; margin: 0;">
         📅 {{session.start}} to {{session.end}}
       </p>
@@ -34,34 +23,12 @@
     <form method="post" action="/sessions/{{session._id}}/book">
       <input type="hidden" name="userId" value="{{user._id}}">
 
-      <div class="card-section">
-        <h3 style="margin: 0 0 1rem 0; color: #333;">Your Details</h3>
-        
-        <div class="field">
-          <label for="name" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Full Name</label>
-          <input id="name" name="name" type="text" required value="{{user.name}}" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
-        </div>
-
-        <div class="field" style="margin-top: 1.5rem;">
-          <label for="email" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Email</label>
-          <input id="email" name="email" type="email" required value="{{user.email}}" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
-        </div>
-
-        <div class="field" style="margin-top: 1.5rem;">
-          <label for="notes" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Notes (injuries, preferences)</label>
-          <textarea id="notes" name="notes" rows="4" placeholder="Optional - any health considerations we should know about" style="width: 100%; padding: 0.6rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; font-family: inherit;">{{notes}}</textarea>
-        </div>
-
-        <div class="field" style="margin-top: 1.5rem; display: flex; align-items: flex-start; gap: 0.8rem;">
-          <input id="consent" name="consent" type="checkbox" required style="margin-top: 0.2rem; cursor: pointer;">
-          <label for="consent" style="font-size: 0.95rem; color: #666; cursor: pointer;">I agree to the studio's booking terms &amp; health disclaimer.</label>
-        </div>
-      </div>
+      {{> bookingUserForm}}
 
       <div class="card-action">
-        <div style="display: flex; gap: 1rem; justify-content: center;">
-          <button class="btn btn-primary" type="submit" style="flex: 1;">Confirm Booking</button>
-          <a href="/" class="btn" style="flex: 1; text-align: center; padding: 0.7rem 1rem; background-color: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; border: 1px solid #ddd;">Cancel</a>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Confirm Booking</button>
+          <a href="/" class="btn btn-secondary">Cancel</a>
         </div>
       </div>
     </form>

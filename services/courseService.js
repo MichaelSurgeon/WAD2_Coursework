@@ -52,15 +52,16 @@ const formatCourseData = (course, sessions) => {
 export const CourseService = {
     async getAllCourses() {
         const courses = await CourseModel.list();
-        return Promise.all(
+        const formattedCourses = await Promise.all(
             courses.map(async (c) => {
                 const sessions = await SessionModel.listByCourse(c._id);
                 return formatCourseData(c, sessions);
             })
         );
+        return formattedCourses.filter(c => c.sessionsCount > 0);
     },
 
-    async getFilteredAndEnrichedCourses(level, type, allowDropIn, searchQuery) {
+    async getFilterdCourses(level, type, allowDropIn, searchQuery) {
         const filter = {};
         if (level) filter.level = level;
         if (type) filter.type = type;
@@ -84,12 +85,13 @@ export const CourseService = {
             return (a.title || "").localeCompare(b.title || "");
         });
 
-        return Promise.all(
+        const formattedCourses = await Promise.all(
             courses.map(async (c) => {
                 const sessions = await SessionModel.listByCourse(c._id);
                 return formatCourseData(c, sessions);
             })
         );
+        return formattedCourses.filter(c => c.sessionsCount > 0);
     },
 
     async getCourseById(courseId) {
@@ -128,21 +130,25 @@ export const CourseService = {
             startDate: data.startDate || null,
             endDate: data.endDate || null,
             allowDropIn: data.allowDropIn === "on" || data.allowDropIn === true,
+            sessionIds: [],
         });
     },
 
     async updateCourse(courseId, data) {
-        await CourseModel.update(courseId, {
-            title: data.title,
-            description: data.description,
-            level: data.level,
-            type: data.type,
-            location: data.location || null,
-            price: data.price ? parseFloat(data.price) : null,
-            startDate: data.startDate || null,
-            endDate: data.endDate || null,
-            allowDropIn: data.allowDropIn === "on" || data.allowDropIn === true,
-        });
+        const updateData = {};
+
+        if (data.title !== undefined) updateData.title = data.title;
+        if (data.description !== undefined) updateData.description = data.description;
+        if (data.level !== undefined) updateData.level = data.level;
+        if (data.type !== undefined) updateData.type = data.type;
+        if (data.location !== undefined) updateData.location = data.location || null;
+        if (data.price !== undefined) updateData.price = data.price ? parseFloat(data.price) : null;
+        if (data.startDate !== undefined) updateData.startDate = data.startDate || null;
+        if (data.endDate !== undefined) updateData.endDate = data.endDate || null;
+        if (data.allowDropIn !== undefined) updateData.allowDropIn = data.allowDropIn === "on" || data.allowDropIn === true;
+        if (data.sessionIds !== undefined) updateData.sessionIds = data.sessionIds;
+
+        await CourseModel.update(courseId, updateData);
         return this.getCourseById(courseId);
     },
 

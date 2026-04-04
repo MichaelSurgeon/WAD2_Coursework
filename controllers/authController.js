@@ -75,7 +75,11 @@ export const registerHandler = async (req, res, next) => {
     }
 };
 
+export const logoutConfirmationPage = (req, res) => {
+    res.render("pages/logout-confirmation", { title: "Logout Confirmation" });
+};
+
 export const logout = (req, res) => {
     res.clearCookie("jwt");
-    res.redirect("/");
+    res.redirect("/login");
 };

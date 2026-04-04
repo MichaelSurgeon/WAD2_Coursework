@@ -1,5 +1,4 @@
 import { CourseService } from "../services/courseService.js";
-import { SessionService } from "../services/sessionService.js";
 import {
   bookCourseForUser,
   bookSessionForUser,
@@ -10,14 +9,16 @@ import {
   formatCourseDetail,
   formatBookingForConfirmation,
 } from "../helpers/dataTransformers.js";
+import { sendRenderError } from "../helpers/errorHandlers.js";
 
 export const homePage = async (req, res, next) => {
   try {
-    const courses = await CourseService.getAllCourses();
+    const allCourses = await CourseService.getAllCourses();
+    const featuredCourses = allCourses.slice(0, 2);
     res.render("pages/home", {
       title: "Yoga Courses",
       user: req.user,
-      courses,
+      courses: featuredCourses,
     });
   } catch (err) {
     next(err);
@@ -30,9 +31,7 @@ export const courseDetailPage = async (req, res, next) => {
     const courseData = await CourseService.getCourseById(courseId);
 
     if (!courseData) {
-      return res
-        .status(404)
-        .render("pages/error", { title: "Not found", message: "Course not found" });
+      return sendRenderError(res, "Course not found");
     }
 
     const { course, sessions } = formatCourseDetail(courseData);
@@ -48,55 +47,11 @@ export const courseDetailPage = async (req, res, next) => {
   }
 };
 
-export const getBookCourseForm = async (req, res, next) => {
-  try {
-    const courseId = req.params.id;
-    const courseData = await CourseService.getCourseById(courseId);
-
-    if (!courseData) {
-      return res
-        .status(404)
-        .render("pages/error", { title: "Not found", message: "Course not found" });
-    }
-
-    const { course } = formatCourseDetail(courseData);
-
-    res.render("pages/course-book", {
-      title: `Book: ${course.title}`,
-      user: req.user,
-      course,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
 export const postBookCourse = async (req, res, next) => {
   try {
     const courseId = req.params.id;
     const booking = await bookCourseForUser(req.user._id, courseId);
     res.redirect(`/bookings/${booking._id}?status=${booking.status}`);
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const getBookSessionForm = async (req, res, next) => {
-  try {
-    const sessionId = req.params.id;
-    const session = await SessionService.getSessionById(sessionId);
-
-    if (!session) {
-      return res
-        .status(404)
-        .render("pages/error", { title: "Not found", message: "Session not found" });
-    }
-
-    res.render("pages/session-book", {
-      title: `Book Session`,
-      user: req.user,
-      session,
-    });
   } catch (err) {
     next(err);
   }

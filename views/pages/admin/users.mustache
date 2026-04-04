@@ -2,47 +2,57 @@
 {{> header}}
 
 <main class="wrap">
-  <div style="max-width: 900px; margin: 2rem auto;">
-    <div class="card" style="margin-bottom: 2rem;">
+  <div class="page-container">
+    <div class="card page-header">
       <div class="card-header">
-        <h1 style="margin: 0;">Manage Users</h1>
-        <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.95rem;">View all users and manage their roles</p>
+        <h1 class="page-header-title">Manage Users</h1>
+        <p class="page-header-subtitle">View all users and manage their roles</p>
+      </div>
+
+      <div class="card-action">
+        <a href="/admin/users/new" class="btn btn-primary">➕ Add New User</a>
       </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem;">
+    <div class="user-list">
       {{#users}}
       <div class="card">
         <div class="card-section">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <h3 style="margin: 0;">{{username}}</h3>
-              <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">{{email}}</p>
+          <div class="user-card-header">
+            <div class="user-info">
+              <h3>{{username}}</h3>
+              <p>{{email}}</p>
             </div>
             <div>
               {{#isOrganiser}}
-              <span style="display: inline-block; background-color: var(--brand); color: white; padding: 0.3rem 0.8rem; border-radius: 3px; font-size: 0.85rem; font-weight: 600;">Organiser</span>
+              <span class="user-role-badge user-role-badge-organiser">Organiser</span>
               {{/isOrganiser}}
               {{^isOrganiser}}
-              <span style="display: inline-block; background-color: #e0e0e0; color: #666; padding: 0.3rem 0.8rem; border-radius: 3px; font-size: 0.85rem;">User</span>
+              <span class="user-role-badge user-role-badge-user">User</span>
               {{/isOrganiser}}
             </div>
           </div>
         </div>
 
         <div class="card-action">
-          <div style="display: flex; gap: 0.8rem; justify-content: center;">
+          <div class="button-container-full-flex">
             {{^isOrganiser}}
-            <form method="post" action="/admin/users/{{id}}/promote" style="flex: 1;">
-              <button class="btn" type="submit" style="width: 100%; padding: 0.6rem 1rem; background-color: var(--brand); color: white; border: none; border-radius: 4px; cursor: pointer;">Promote to Organiser</button>
+            <form method="post" action="/admin/users/{{id}}/promote">
+              <button class="btn btn-primary" type="submit">Promote to Organiser</button>
             </form>
             {{/isOrganiser}}
             {{#isOrganiser}}
-            <div style="flex: 1; padding: 0.6rem 1rem; text-align: center; color: #999; font-size: 0.9rem;">Organiser</div>
-            {{/isOrganiser}}
-            <form method="post" action="/admin/users/{{id}}/delete" style="flex: 1;">
-              <button class="btn" type="submit" onclick="return confirm('Are you sure you want to delete this user?')" style="width: 100%; padding: 0.6rem 1rem; background-color: #f44; color: white; border: none; border-radius: 4px; cursor: pointer;">Delete</button>
+            {{^isCurrentUser}}
+            <form method="post" action="/admin/users/{{id}}/demote">
+              <button class="btn btn-secondary" type="submit">Demote to User</button>
             </form>
+            {{/isCurrentUser}}
+            {{/isOrganiser}}
+            {{^isCurrentUser}}
+            <form method="post" action="/admin/users/{{id}}/delete">
+              <button class="btn btn-delete" type="submit" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
+            </form>
+            {{/isCurrentUser}}
           </div>
         </div>
       </div>
@@ -50,15 +60,16 @@
     </div>
 
     {{^users}}
-    <div class="card" style="text-align: center;">
+    <div class="card text-center">
       <div class="card-section">
-        <p style="color: #666; font-size: 1.05rem; margin: 2rem 0;">No users found.</p>
+        <p class="text-muted empty-state-message">No users found.</p>
+        <a href="/admin/users/new" class="btn btn-primary">Create Your First User</a>
       </div>
     </div>
     {{/users}}
 
-    <div style="margin-top: 2rem;">
-      <a href="/admin" style="color: var(--brand); text-decoration: none;">← Back to Dashboard</a>
+    <div class="back-link">
+      <a href="/admin">← Back to Dashboard</a>
     </div>
   </div>
 </main>

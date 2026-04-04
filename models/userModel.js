@@ -1,34 +1,40 @@
 
 import { usersDb } from "./_db.js";
+import bcrypt from "bcrypt";
 
 export const UserModel = {
   async create(user) {
     const userToInsert = { ...user };
-    return usersDb.insert(userToInsert);
+
+    if (userToInsert.password) {
+      userToInsert.password = await bcrypt.hash(userToInsert.password, 10);
+    }
+
+    return await usersDb.insert(userToInsert);
   },
 
   async findByUsername(username) {
-    return usersDb.findOne({ username });
+    return await usersDb.findOne({ username });
   },
 
   async findByEmail(email) {
-    return usersDb.findOne({ email });
+    return await usersDb.findOne({ email });
   },
 
   async findById(id) {
-    return usersDb.findOne({ _id: id });
+    return await usersDb.findOne({ _id: id });
   },
 
   async list() {
-    return usersDb.find({});
+    return await usersDb.find({});
   },
 
   async update(id, updates) {
-    return usersDb.update({ _id: id }, { $set: updates });
+    return await usersDb.update({ _id: id }, { $set: updates });
   },
 
   async delete(id) {
-    return usersDb.remove({ _id: id });
+    return await usersDb.remove({ _id: id });
   },
 };
 

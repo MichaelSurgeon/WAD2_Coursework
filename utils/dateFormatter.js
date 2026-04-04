@@ -19,14 +19,5 @@ export const fmtDateOnly = (iso) =>
         })
         : "";
 
-export const fmtDateTime = (iso) =>
-    iso
-        ? new Date(iso).toLocaleString("en-GB", {
-            weekday: "short",
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-        })
-        : "TBA";
+export const fmtDateForInput = (iso) =>
+    iso ? iso.split("T")[0] : "";

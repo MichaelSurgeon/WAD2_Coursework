@@ -2,46 +2,46 @@
 {{> header}}
 
 <main class="wrap">
-  <div style="max-width: 1000px; margin: 2rem auto;">
-    <div class="card" style="margin-bottom: 2rem;">
+  <div class="page-container container-lg">
+    <div class="card page-header">
       <div class="card-header">
-        <h1 style="margin: 0;">Admin Dashboard</h1>
-        <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.95rem;">Welcome, <strong>{{user.username}}</strong>. Manage your yoga studio from here.</p>
+        <h1 class="page-header-title">Admin Dashboard</h1>
+        <p class="page-header-subtitle">Welcome, <strong>{{user.username}}</strong>. Manage your yoga studio from here.</p>
       </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="stat-card-grid">
       <div class="card">
-        <div class="card-section" style="text-align: center;">
-          <p style="color: #999; font-size: 0.85rem; margin: 0 0 0.5rem 0; text-transform: uppercase; letter-spacing: 0.05em;">Active Courses</p>
-          <h2 style="margin: 0; font-size: 2.5rem; color: var(--brand);">{{coursesCount}}</h2>
+        <div class="card-section stat-card-content">
+          <p class="stat-card-label">Active Courses</p>
+          <h2 class="stat-card-number">{{coursesCount}}</h2>
         </div>
         <div class="card-action">
-          <a href="/admin/courses" class="btn btn-primary" style="display: block; text-align: center;">Manage Courses</a>
+          <a href="/admin/courses" class="btn btn-primary btn-block text-center">Manage Courses</a>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-section" style="text-align: center;">
-          <p style="color: #999; font-size: 0.85rem; margin: 0 0 0.5rem 0; text-transform: uppercase; letter-spacing: 0.05em;">Registered Users</p>
-          <h2 style="margin: 0; font-size: 2.5rem; color: var(--brand);">{{usersCount}}</h2>
+        <div class="card-section stat-card-content">
+          <p class="stat-card-label">Registered Users</p>
+          <h2 class="stat-card-number">{{usersCount}}</h2>
         </div>
         <div class="card-action">
-          <a href="/admin/users" class="btn btn-primary" style="display: block; text-align: center;">Manage Users</a>
+          <a href="/admin/users" class="btn btn-primary btn-block text-center">Manage Users</a>
         </div>
       </div>
     </div>
 
     <div class="card">
       <div class="card-header">
-        <h2 style="margin: 0;">Quick Actions</h2>
+        <h2 class="m-0">Quick Actions</h2>
       </div>
 
       <div class="card-section">
-        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
-          <a href="/admin/courses/new" class="btn btn-primary" style="display: block; text-align: center; padding: 0.8rem 1rem;">➕ Add New Course</a>
-          <a href="/admin/courses" class="btn" style="display: block; text-align: center; padding: 0.8rem 1rem; background-color: #f0f0f0; color: #333; text-decoration: none; border: 1px solid #ddd; border-radius: 4px;">View All Courses</a>
-          <a href="/admin/users" class="btn" style="display: block; text-align: center; padding: 0.8rem 1rem; background-color: #f0f0f0; color: #333; text-decoration: none; border: 1px solid #ddd; border-radius: 4px;">Manage Users</a>
+        <div class="flex-column">
+          <a href="/admin/courses/new" class="btn btn-primary btn-block text-center">➕ Add New Course</a>
+          <a href="/admin/courses" class="btn btn-secondary btn-block text-center">View All Courses</a>
+          <a href="/admin/users" class="btn btn-secondary btn-block text-center">Manage Users</a>
         </div>
       </div>
     </div>

@@ -1,13 +1,3 @@
-export const formatCourseForAdmin = (course) => ({
-    id: course.id,
-    title: course.title,
-    level: course.level,
-    type: course.type,
-    sessionsCount: course.sessionsCount,
-    startDate: course.startDate,
-    endDate: course.endDate,
-});
-
 export const formatUserForAdmin = (user) => ({
     id: user.id,
     username: user.username,

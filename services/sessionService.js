@@ -3,6 +3,10 @@ import { CourseModel } from "../models/courseModel.js";
 import { fmtDate } from "../utils/dateFormatter.js";
 
 export const SessionService = {
+    async listByCourse(courseId) {
+        return SessionModel.listByCourse(courseId);
+    },
+
     async getSessionById(sessionId) {
         const session = await SessionModel.findById(sessionId);
         if (!session) return null;
@@ -24,38 +28,21 @@ export const SessionService = {
         };
     },
 
-    async createSession(courseId, data) {
-        return SessionModel.create({
-            courseId,
-            startDateTime: data.startDateTime,
-            endDateTime: data.endDateTime,
-            capacity: parseInt(data.capacity) || 0,
-            bookedCount: 0,
-        });
-    },
-
-    async updateSession(sessionId, data) {
-        await SessionModel.update(sessionId, {
-            startDateTime: data.startDateTime,
-            endDateTime: data.endDateTime,
-            capacity: parseInt(data.capacity) || 0,
-        });
-        return this.getSessionById(sessionId);
-    },
-
     async deleteSession(sessionId) {
         return SessionModel.delete(sessionId);
     },
 
-    async incrementBooking(sessionId) {
-        const session = await SessionModel.findById(sessionId);
-        if (!session) throw new Error("Session not found");
+    formatSessionForAdmin(session, courseId) {
+        return {
+            _id: session._id,
+            start: fmtDate(session.startDateTime),
+            capacity: session.capacity,
+            location: session.location || "-",
+            courseId,
+        };
+    },
 
-        if ((session.bookedCount ?? 0) >= (session.capacity ?? 0)) {
-            return "WAITLISTED";
-        }
-
-        await SessionModel.incrementBookedCount(sessionId, 1);
-        return "CONFIRMED";
+    formatSessionsForAdmin(sessions, courseId) {
+        return sessions.map(s => this.formatSessionForAdmin(s, courseId));
     },
 };

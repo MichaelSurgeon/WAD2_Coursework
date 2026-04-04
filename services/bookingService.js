@@ -69,26 +69,3 @@ export async function getBookingById(bookingId) {
   }
   return booking;
 }
-
-export async function cancelBooking(bookingId, userId) {
-  const booking = await getBookingById(bookingId);
-
-  if (booking.userId !== userId) {
-    const err = new Error("You can only cancel your own bookings");
-    err.code = "FORBIDDEN";
-    throw err;
-  }
-
-  if (booking.status === "CANCELLED") {
-    return booking;
-  }
-
-  if (booking.status === "CONFIRMED") {
-    for (const sessionId of booking.sessionIds) {
-      await SessionModel.incrementBookedCount(sessionId, -1);
-    }
-  }
-
-  const updated = await BookingModel.cancel(bookingId);
-  return updated;
-}
