@@ -42,5 +42,9 @@ export const SessionModel = {
 
   async delete(id) {
     return await sessionsDb.remove({ _id: id });
+  },
+
+  async getSessionByUserAndCourse(userId, courseId) {
+    return await sessionsDb.findOne({ userId, courseId });
   }
 };

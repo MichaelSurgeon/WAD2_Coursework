@@ -19,7 +19,7 @@ export const listCourses = async (req, res, next) => {
             title: "Manage Courses",
             user: req.user,
             courses: pageItems,
-            pagination,
+            pagination
         });
     } catch (err) {
         next(err);
@@ -28,8 +28,8 @@ export const listCourses = async (req, res, next) => {
 
 export const showAddCoursePage = (req, res) => {
     const defaultCourse = {
-        title: "",
-        description: "",
+        title: "Example Course",
+        description: "Explain about the course",
         level: "beginner",
         type: "WEEKLY_BLOCK",
         startDate: "",
@@ -215,10 +215,12 @@ export const getClassList = async (req, res, next) => {
         }
 
         const bookings = await BookingModel.findByCourse(req.params.id);
+        const userIds = bookings.map(b => b.userId);
+        const users = await UserModel.findByIds(userIds);
         const participants = [];
 
         for (const booking of bookings) {
-            const user = await UserModel.findById(booking.userId);
+            const user = users.find(u => u._id === booking.userId);
             participants.push({ username: user?.username || "N/A", email: user?.email || "N/A" });
         }
 

@@ -32,15 +32,15 @@ export const parsePaginationParams = (page = "1", pageSize = "4") => {
 export const paginateCourses = (courses, page, pageSize, req) => {
     const { p, ps } = parsePaginationParams(page, pageSize);
     const total = courses.length;
-    const totalPages = Math.ceil(total / ps) || 1;
-    const pageItems = courses.slice((p - 1) * ps, p * ps);
+    const totalPages = Math.ceil(total / ps) || 1; // Divide total course by page size to get total pages, default to 1 when no course
+    const pageItems = courses.slice((p - 1) * ps, p * ps); // Cut the courses to get items for current page 
 
     return {
         pageItems,
         pagination: {
             ...buildPaginationObject(p, ps, total, totalPages),
-            prevLink: p > 1 ? buildLink(req, p - 1, ps) : null,
-            nextLink: p < totalPages ? buildLink(req, p + 1, ps) : null,
+            prevLink: p > 1 ? buildLink(req, p - 1, ps) : null, // Build prev link if there is a previous page
+            nextLink: p < totalPages ? buildLink(req, p + 1, ps) : null, // Build next link if there is a next page
         },
     };
 };

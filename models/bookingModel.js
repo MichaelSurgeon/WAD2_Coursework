@@ -10,5 +10,8 @@ export const BookingModel = {
   },
   async findByCourse(courseId) {
     return await bookingsDb.find({ courseId });
+  },
+  async findByUserAndCourse(userId, courseId) {
+    return await bookingsDb.findOne({ userId, courseId });
   }
 };

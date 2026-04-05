@@ -29,6 +29,10 @@ export const UserModel = {
     return await usersDb.find({});
   },
 
+  async findByIds(ids) {
+    return await usersDb.find({ _id: { $in: ids } });
+  },
+
   async update(id, updates) {
     return await usersDb.update({ _id: id }, { $set: updates });
   },
