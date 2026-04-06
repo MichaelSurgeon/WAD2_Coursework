@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-export const ensureUser = async (req, res, next) => {
+export const ensureUser = (req, res, next) => {
     try {
         if (req.user) {
             req.user.isOrganiser = req.user.role === "organiser";

@@ -8,10 +8,11 @@ const verifyToken = (token) => {
 };
 
 const decodeUserFromRequest = (req) => verifyToken(req.cookies.jwt);
+const getUserFromRequest = (req) => req.user || decodeUserFromRequest(req);
 
 export const verifyUser = (req, res, next) => {
     try {
-        req.user = decodeUserFromRequest(req);
+        req.user = getUserFromRequest(req);
         return next();
     } catch (err) {
         console.error("Token verification failed:", err.message);
@@ -21,7 +22,7 @@ export const verifyUser = (req, res, next) => {
 
 export const verifyOrganiser = (req, res, next) => {
     try {
-        req.user = decodeUserFromRequest(req);
+        req.user = getUserFromRequest(req);
 
         if (req.user.role !== "organiser") {
             return res.status(403).render("pages/error", {
