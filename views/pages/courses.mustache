@@ -5,57 +5,9 @@
   <div class="container-lg">
     <h1 class="m-top-2 m-bottom-1">Browse Yoga Courses</h1>
 
-    <div class="card m-bottom-2">
-      <div class="card-header">
-        <h2 class="m-0">Filter Courses</h2>
-      </div>
-
-      <form method="get" class="card-section">
-        <div class="filter-form-grid">
-          <div>
-            <label for="level" class="form-field-label">Level</label>
-            <select name="level" id="level" class="form-field-select">
-              <option value="" {{^filters.level}}selected{{/filters.level}}>Any Level</option>
-              <option value="beginner" {{#filters.isBeginner}}selected{{/filters.isBeginner}}>Beginner</option>
-              <option value="intermediate" {{#filters.isIntermediate}}selected{{/filters.isIntermediate}}>Intermediate</option>
-              <option value="advanced" {{#filters.isAdvanced}}selected{{/filters.isAdvanced}}>Advanced</option>
-            </select>
-          </div>
-
-          <div>
-            <label for="type" class="form-field-label">Course Type</label>
-            <select name="type" id="type" class="form-field-select">
-              <option value="" {{^filters.type}}selected{{/filters.type}}>Any Type</option>
-              <option value="WEEKLY_BLOCK" {{#filters.isWeekly}}selected{{/filters.isWeekly}}>Weekly Block</option>
-              <option value="WEEKEND_WORKSHOP" {{#filters.isWeekend}}selected{{/filters.isWeekend}}>Weekend Workshop</option>
-            </select>
-          </div>
-
-          <div>
-            <label for="dropin" class="form-field-label">Drop-in Availability</label>
-            <select name="dropin" id="dropin" class="form-field-select">
-              <option value="" {{^filters.dropin}}selected{{/filters.dropin}}>Any</option>
-              <option value="yes" {{#filters.isYes}}selected{{/filters.isYes}}>Drop-in Available</option>
-              <option value="no" {{#filters.isNo}}selected{{/filters.isNo}}>Full Course Only</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="filter-form-search">
-          <label for="q" class="form-field-label">Search</label>
-          <input type="search" name="q" id="q" value="{{filters.q}}" placeholder="Search by course name or description..." class="form-field-input">
-        </div>
-
-        <div class="filter-form-actions">
-          <button class="btn btn-primary" type="submit">Apply Filters</button>
-          <a href="/courses" class="btn btn-secondary" {{^hasActiveFilters}}aria-disabled="true" onclick="return false"{{/hasActiveFilters}}>Reset</a>
-        </div>
-      </form>
-    </div>
-
     <section aria-label="Course results" class="cards">
       {{#courses}}{{> courseCard}}{{/courses}}
-      {{^courses}}<p class="empty-message">No courses found matching your filters.</p>{{/courses}}
+      {{^courses}}<p class="empty-message">No courses found.</p>{{/courses}}
     </section>
 
     {{#pagination}}
