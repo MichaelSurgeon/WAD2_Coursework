@@ -7,23 +7,21 @@ const verifyToken = (token) => {
     return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 };
 
+const decodeUserFromRequest = (req) => verifyToken(req.cookies.jwt);
+
 export const verifyUser = (req, res, next) => {
     try {
-        const token = req.cookies.jwt;
-        const decoded = verifyToken(token);
-        req.user = decoded;
-        next();
+        req.user = decodeUserFromRequest(req);
+        return next();
     } catch (err) {
         console.error("Token verification failed:", err.message);
-        res.redirect("/login");
+        return res.redirect("/login");
     }
 };
 
 export const verifyOrganiser = (req, res, next) => {
     try {
-        const token = req.cookies.jwt;
-        const decoded = verifyToken(token);
-        req.user = decoded;
+        req.user = decodeUserFromRequest(req);
 
         if (req.user.role !== "organiser") {
             return res.status(403).render("pages/error", {
@@ -32,9 +30,9 @@ export const verifyOrganiser = (req, res, next) => {
             });
         }
 
-        next();
+        return next();
     } catch (err) {
         console.error("Organiser verification failed:", err.message);
-        res.redirect("/login");
+        return res.redirect("/login");
     }
 };

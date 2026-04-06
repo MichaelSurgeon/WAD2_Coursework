@@ -17,7 +17,7 @@
     </div>
     {{/sessionsList}}
 
-    <form method="post" action="/admin/courses/{{course.id}}/sessions">
+    <form method="post" action="/admin/courses/{{course._id}}/sessions">
       <div class="card-section form-section">
         <h3>Add New Session</h3>
 
@@ -84,7 +84,7 @@
       <div class="card-action">
         <div class="button-container-full-flex">
           <a href="/admin/courses" class="btn btn-primary">All Done</a>
-          <a href="/admin/courses/{{course.id}}/edit" class="btn btn-secondary">Edit Course</a>
+          <a href="/admin/courses/{{course._id}}/edit" class="btn btn-secondary">Edit Course</a>
         </div>
       </div>
     </div>

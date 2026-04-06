@@ -1,20 +1,33 @@
 import { UserService } from "../services/userService.js";
 import { AuthService } from "../services/authService.js";
 import { ValidationService } from "../services/validationService.js";
-import { formatUserForAdmin } from "../helpers/dataTransformers.js";
+import { sendRenderError } from "../helpers/errorHandlers.js";
+
+const formatUserForAdmin = (user) => ({
+    id: user._id,
+    username: user.username,
+    email: user.email,
+    role: user.role,
+    isOrganiser: user.role === "organiser",
+});
 
 export const listUsers = async (req, res, next) => {
     try {
+        // Ran out of time: but pagination would be prefered here.
+
         const users = await UserService.getAllUsers();
         const currentUserId = req.user._id;
 
         res.render("pages/admin/users", {
             title: "Manage Users",
             user: req.user,
-            users: users.map(u => ({
-                ...formatUserForAdmin(u),
-                isCurrentUser: u.id === currentUserId,
-            })),
+            users: users.map((u) => {
+                const formattedUser = formatUserForAdmin(u);
+                return {
+                    ...formattedUser,
+                    isCurrentUser: formattedUser.id === currentUserId,
+                };
+            }),
         });
     } catch (err) {
         next(err);
@@ -32,27 +45,21 @@ export const postAddUser = async (req, res, next) => {
     try {
         const { username, email, password, passwordConfirm } = req.body;
 
+        const renderError = (error) => res.render("pages/admin/user-form", {
+            title: "Add User",
+            user: req.user,
+            error,
+            username,
+            email,
+        });
+
         const validationErrors = ValidationService.validateRegistration(req.body);
-        if (validationErrors) {
-            return res.render("pages/admin/user-form", {
-                title: "Add User",
-                user: req.user,
-                error: validationErrors[0],
-                username,
-                email,
-            });
-        }
+        if (validationErrors)
+            return renderError(validationErrors[0]);
 
         const authErrors = await AuthService.validateRegister(username, email, password, passwordConfirm);
-        if (authErrors) {
-            return res.render("pages/admin/user-form", {
-                title: "Add User",
-                user: req.user,
-                error: authErrors[0],
-                username,
-                email,
-            });
-        }
+        if (authErrors)
+            return renderError(authErrors[0]);
 
         await AuthService.createUser(username, email, password);
         res.redirect("/admin/users");
@@ -82,10 +89,9 @@ export const demoteUserToStudent = async (req, res, next) => {
 export const deleteUser = async (req, res, next) => {
     try {
         if (req.params.id === req.user._id) {
-            return res.status(403).render("pages/error", {
+            return sendRenderError(res, "You cannot delete your own account", 403, {
                 title: "Cannot Delete",
                 user: req.user,
-                message: "You cannot delete your own account",
             });
         }
         await UserService.deleteUser(req.params.id);

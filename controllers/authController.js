@@ -9,24 +9,15 @@ export const loginHandler = async (req, res, next) => {
     try {
         const { username, password } = req.body;
 
+        const renderError = (error) => res.render("pages/auth/login", { title: "Login", error, username });
+
         const validationErrors = ValidationService.validateLogin(req.body);
-        if (validationErrors) {
-            return res.render("pages/auth/login", {
-                title: "Login",
-                error: validationErrors[0],
-                username,
-            });
-        }
+        if (validationErrors)
+            return renderError(validationErrors[0]);
 
         const user = await AuthService.validateLogin(username, password);
-
-        if (!user) {
-            return res.render("pages/auth/login", {
-                title: "Login",
-                error: "Invalid credentials",
-                username,
-            });
-        }
+        if (!user)
+            return renderError("Invalid credentials");
 
         const token = AuthService.createToken(user);
         const options = AuthService.getTokenOptions();
@@ -45,25 +36,15 @@ export const registerHandler = async (req, res, next) => {
     try {
         const { username, email, password, passwordConfirm } = req.body;
 
+        const renderError = (error) => res.render("pages/auth/register", { title: "Register", error, username, email });
+
         const validationErrors = ValidationService.validateRegistration(req.body);
-        if (validationErrors) {
-            return res.render("pages/auth/register", {
-                title: "Register",
-                error: validationErrors[0],
-                username,
-                email,
-            });
-        }
+        if (validationErrors)
+            return renderError(validationErrors[0]);
 
         const authErrors = await AuthService.validateRegister(username, email, password, passwordConfirm);
-        if (authErrors) {
-            return res.render("pages/auth/register", {
-                title: "Register",
-                error: authErrors[0],
-                username,
-                email,
-            });
-        }
+        if (authErrors)
+            return renderError(authErrors[0]);
 
         const newUser = await AuthService.createUser(username, email, password);
         const token = AuthService.createToken(newUser);

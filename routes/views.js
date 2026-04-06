@@ -1,4 +1,3 @@
-// routes/views.js
 import { Router } from "express";
 import {
   homePage,
@@ -22,7 +21,7 @@ router.post("/register", registerHandler);
 router.get("/logout", logoutConfirmationPage);
 router.post("/logout", logout);
 
-// Public routes
+// Public routes for no auth
 router.get("/", homePage);
 router.get("/courses", coursesListPage);
 router.get("/courses/:id", courseDetailPage);

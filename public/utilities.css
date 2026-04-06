@@ -1,3 +1,64 @@
+/* Layout + Utility Helpers */
+
+/* Flex Utilities */
+.flex-row {
+    display: flex;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.flex-center {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+/* Grid Utilities */
+.grid-2-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.grid-auto {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Container Utilities */
+.container {
+    max-width: 900px;
+    margin: 2rem auto;
+}
+
+.container-sm {
+    max-width: 500px;
+    margin: 2rem auto;
+}
+
+.container-lg {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.card-centered-wide {
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
 /* Text Utilities */
 .text-center {
     text-align: center;
@@ -96,18 +157,7 @@
     margin: 0;
 }
 
-.form-section-title {
-    margin: 0 0 1.5rem 0;
-    color: #333;
-}
-
 /* Admin Form Grid */
-.admin-form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
-
 .form-section-title {
     margin: 0 0 1.5rem 0;
     color: #333;
@@ -269,14 +319,6 @@
 
 .btn-block {
     display: block;
-}
-
-/* Stat Cards */
-.stat-card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
 }
 
 /* Stat Cards */

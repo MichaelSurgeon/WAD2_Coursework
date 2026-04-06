@@ -10,35 +10,35 @@ export const UserModel = {
       userToInsert.password = await bcrypt.hash(userToInsert.password, 10);
     }
 
-    return await usersDb.insert(userToInsert);
+    return usersDb.insert(userToInsert);
   },
 
   async findByUsername(username) {
-    return await usersDb.findOne({ username });
+    return usersDb.findOne({ username });
   },
 
   async findByEmail(email) {
-    return await usersDb.findOne({ email });
-  },
-
-  async findById(id) {
-    return await usersDb.findOne({ _id: id });
+    return usersDb.findOne({ email });
   },
 
   async list() {
-    return await usersDb.find({});
+    return usersDb.find({});
   },
 
   async findByIds(ids) {
-    return await usersDb.find({ _id: { $in: ids } });
+    return usersDb.find({ _id: { $in: ids } });
   },
 
   async update(id, updates) {
-    return await usersDb.update({ _id: id }, { $set: updates });
+    return usersDb.update({ _id: id }, { $set: updates });
   },
 
   async delete(id) {
-    return await usersDb.remove({ _id: id });
+    return usersDb.remove({ _id: id });
   },
+
+  async getUserCount() {
+    return usersDb.count();
+  }
 };
 

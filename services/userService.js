@@ -11,6 +11,10 @@ export const UserService = {
         }));
     },
 
+    async getTotalUserCount() {
+        return await UserModel.getUserCount();
+    },
+
     async promoteToOrganiser(userId) {
         return UserModel.update(userId, { role: "organiser" });
     },

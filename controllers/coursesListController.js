@@ -1,15 +1,22 @@
 import { CourseService } from "../services/courseService.js";
-import { paginateCourses } from "../helpers/paginationHelpers.js";
-import { parseDropInFilter } from "../helpers/dataTransformers.js";
+
+const parseDropInFilter = (dropin) => {
+  const dropInMap = { yes: true, no: false };
+  return dropInMap[dropin];
+};
 
 export const coursesListPage = async (req, res, next) => {
   try {
     const { level, type, dropin, q } = req.query;
 
     const allowDropIn = parseDropInFilter(dropin);
-    const courses = await CourseService.getFilterdCourses(level, type, allowDropIn, q);
 
-    const { pageItems, pagination } = paginateCourses(courses, req.query.page, req.query.pageSize, req);
+    const { items, pagination } = await CourseService.getCoursesPaginated(
+      req.query.page,
+      req.query.pageSize,
+      { level, type, allowDropIn, q }
+    );
+
     const hasActiveFilters = !!(level || type || dropin || q);
 
     res.render("pages/courses", {
@@ -17,7 +24,7 @@ export const coursesListPage = async (req, res, next) => {
       user: req.user,
       filters: { level, type, dropin, q },
       hasActiveFilters,
-      courses: pageItems,
+      courses: items,
       pagination,
     });
   } catch (err) {

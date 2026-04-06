@@ -73,11 +73,6 @@
         padding: 0.5rem;
     }
 
-    /* Home Grid */
-    .home-content-grid {
-        grid-template-columns: 1fr;
-    }
-
     /* Stats Grid */
     .stat-card-grid {
         grid-template-columns: 1fr;
@@ -88,11 +83,6 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
-    }
-
-    /* Courses Grid */
-    .courses-grid {
-        grid-template-columns: 1fr;
     }
 
     .course-card-info {
@@ -153,14 +143,6 @@
     /* Smaller text on tiny screens */
     body {
         font-size: 14px;
-    }
-
-    /* Grids */
-    .cards,
-    .home-content-grid,
-    .grid-2-cols,
-    .info-section {
-        grid-template-columns: 1fr;
     }
 
     /* Card padding */

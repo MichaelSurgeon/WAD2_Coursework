@@ -1,6 +1,6 @@
 <article class="card">
   <div class="card-header">
-    <h2><a href="/courses/{{id}}">{{title}}</a></h2>
+    <h2><a href="/courses/{{_id}}">{{title}}</a></h2>
     <span class="badge badge-muted">{{level}}</span>
     {{#allowDropIn}}<span class="badge badge-primary">Drop-in Available</span>{{/allowDropIn}}
     {{^allowDropIn}}<span class="badge badge-warning">Full Course Only</span>{{/allowDropIn}}
@@ -41,6 +41,6 @@
   </div>
 
   <div class="card-action">
-    <a href="/courses/{{id}}" class="btn btn-info">View Details</a>
+    <a href="/courses/{{_id}}" class="btn btn-info">View Details</a>
   </div>
 </article>

@@ -18,7 +18,7 @@
       <p style="color: #999; font-size: 0.9rem; margin: 1rem 0 0 0;">📅 {{course.startDate}} – {{course.endDate}}</p>
     </div>
 
-    <form method="post" action="/courses/{{course.id}}/book">
+    <form method="post" action="/courses/{{course._id}}/book">
       <input type="hidden" name="userId" value="{{user._id}}">
 
       {{> bookingUserForm}}
@@ -36,7 +36,7 @@
       <div class="card-action">
         <div class="form-actions">
           <button class="btn btn-primary" type="submit">Confirm Booking</button>
-          <a href="/courses/{{course.id}}" class="btn btn-secondary">Cancel</a>
+          <a href="/courses/{{course._id}}" class="btn btn-secondary">Cancel</a>
         </div>
       </div>
     </form>

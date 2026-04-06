@@ -5,16 +5,11 @@ import {
   getBookingById,
 } from "../services/bookingService.js";
 import { fmtDate } from "../utils/dateFormatter.js";
-import {
-  formatCourseDetail,
-  formatBookingForConfirmation,
-} from "../helpers/dataTransformers.js";
 import { sendRenderError } from "../helpers/errorHandlers.js";
 
 export const homePage = async (req, res, next) => {
   try {
-    const allCourses = await CourseService.getAllCourses();
-    const featuredCourses = allCourses.slice(0, 2);
+    const featuredCourses = await CourseService.getFeaturedCourses();
     res.render("pages/home", {
       title: "Yoga Courses",
       user: req.user,
@@ -34,7 +29,7 @@ export const courseDetailPage = async (req, res, next) => {
       return sendRenderError(res, "Course not found");
     }
 
-    const { course, sessions } = formatCourseDetail(courseData);
+    const { sessions, ...course } = courseData;
 
     res.render("pages/course", {
       title: courseData.title,
@@ -76,8 +71,10 @@ export const bookingConfirmationPage = async (req, res, next) => {
       title: "Booking confirmation",
       user: req.user,
       booking: {
-        ...formatBookingForConfirmation(booking, fmtDate),
+        id: booking._id,
+        type: booking.type,
         status: req.query.status || booking.status,
+        createdAt: booking.createdAt ? fmtDate(booking.createdAt) : "",
       },
     });
   } catch (err) {

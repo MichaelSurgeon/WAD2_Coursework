@@ -3,13 +3,9 @@ import { SessionModel } from "../models/sessionModel.js";
 import { fmtDate, fmtDateOnly } from "../utils/dateFormatter.js";
 
 const calculateDurationWeeks = (startDate, endDate) => {
-    if (!startDate || !endDate)
-        return null;
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    const diffMs = end - start;
-    const diffWeeks = Math.round(diffMs / (7 * 24 * 60 * 60 * 1000));
-    return Math.max(1, diffWeeks);
+    if (!startDate || !endDate) return null;
+    const diffMs = new Date(endDate) - new Date(startDate);
+    return Math.max(1, Math.round(diffMs / (7 * 24 * 60 * 60 * 1000)));
 };
 
 const formatDurationDisplay = (weeks) => {
@@ -17,9 +13,8 @@ const formatDurationDisplay = (weeks) => {
     return `${weeks} ${weeks === 1 ? "week" : "weeks"}`;
 };
 
-const formatCourseData = (course, sessions) => {
-    const sessionsCount = sessions.length;
-    const pricePerSession = course.price && sessionsCount ? (course.price / sessionsCount).toFixed(2) : null;
+const formatCourseData = (course, sessionCount) => {
+    const pricePerSession = course.price && sessionCount ? (course.price / sessionCount).toFixed(2) : null;
 
     let priceDisplay;
     if (course.allowDropIn && pricePerSession) {
@@ -31,78 +26,60 @@ const formatCourseData = (course, sessions) => {
     }
 
     return {
-        id: course._id,
+        _id: course._id,
         title: course.title,
         level: course.level,
         type: course.type,
         description: course.description,
         location: course.location,
         price: course.price,
-        pricePerSession: pricePerSession,
+        pricePerSession,
         priceDisplay,
         allowDropIn: course.allowDropIn,
         startDate: course.startDate ? fmtDateOnly(course.startDate) : "",
         endDate: course.endDate ? fmtDateOnly(course.endDate) : "",
         durationDisplay: formatDurationDisplay(calculateDurationWeeks(course.startDate, course.endDate)),
-        nextSession: sessions[0] ? fmtDate(sessions[0].startDateTime) : "TBA",
-        sessionsCount,
+        sessionsCount: sessionCount,
     };
 };
 
 export const CourseService = {
-    async getAllCourses() {
-        const courses = await CourseModel.list();
-        const formattedCourses = await Promise.all(
-            courses.map(async (c) => {
-                const sessions = await SessionModel.listByCourse(c._id);
-                return formatCourseData(c, sessions);
-            })
-        );
-        return formattedCourses.filter(c => c.sessionsCount > 0);
-    },
-
-    async getFilterdCourses(level, type, allowDropIn, searchQuery) {
-        const filter = {};
-        if (level) filter.level = level;
-        if (type) filter.type = type;
-        if (allowDropIn !== undefined && allowDropIn !== null) filter.allowDropIn = allowDropIn;
-
-        let courses = await CourseModel.list(filter);
-
-        const query = (searchQuery || "").trim().toLowerCase();
-        if (query) {
-            courses = courses.filter(
-                (c) =>
-                    c.title?.toLowerCase().includes(query) ||
-                    c.description?.toLowerCase().includes(query)
-            );
-        }
-
-        courses.sort((a, b) => {
-            const ad = a.startDate ? new Date(a.startDate).getTime() : Number.MAX_SAFE_INTEGER;
-            const bd = b.startDate ? new Date(b.startDate).getTime() : Number.MAX_SAFE_INTEGER;
-            if (ad !== bd) return ad - bd;
-            return (a.title || "").localeCompare(b.title || "");
+    async getFeaturedCourses() {
+        const featuredCourses = await CourseModel.getCourses({
+            limit: 2,
+            sort: { createdAt: -1 },
+            filter: { $where: function () { return this.sessionIds && this.sessionIds.length > 0; } }
         });
 
-        const formattedCourses = await Promise.all(
-            courses.map(async (c) => {
-                const sessions = await SessionModel.listByCourse(c._id);
-                return formatCourseData(c, sessions);
-            })
-        );
-        return formattedCourses.filter(c => c.sessionsCount > 0);
+        const formattedCourses = featuredCourses.map(course => {
+            return formatCourseData(course, course.sessionIds.length);
+        });
+
+        return formattedCourses;
+    },
+
+    async getCoursesPaginated(page, pageSize, filters = {}) {
+        const result = await CourseModel.getPaginatedCourses(page, pageSize, filters);
+        return {
+            ...result,
+            items: result.items.map(course => formatCourseData(course, course.sessionIds?.length || 0)),
+        };
+    },
+
+    async getCourseCount() {
+        return CourseModel.getCourseCount();
     },
 
     async getCourseById(courseId) {
         const course = await CourseModel.findById(courseId);
-        if (!course) return null;
+        if (!course)
+            return null;
 
         const sessions = await SessionModel.listByCourse(courseId);
-        const pricePerSession = course.price && sessions.length ? (course.price / sessions.length).toFixed(2) : null;
+        const formatted = formatCourseData(course, course.sessionIds.length);
 
         return {
-            ...formatCourseData(course, sessions),
+            ...formatted,
             sessions: sessions.map((s) => ({
                 _id: s._id,
                 start: fmtDate(s.startDateTime),
@@ -114,39 +91,38 @@ export const CourseService = {
                 startIso: s.startDateTime,
                 endIso: s.endDateTime,
                 allowDropIn: course.allowDropIn,
-                pricePerSession: course.allowDropIn ? pricePerSession : null,
+                pricePerSession: course.allowDropIn ? formatted.pricePerSession : null,
             })),
         };
     },
 
-    async createCourse(data) {
+    async createCourse(course) {
         return CourseModel.create({
-            title: data.title,
-            description: data.description,
-            level: data.level,
-            type: data.type,
-            location: data.location || null,
-            price: data.price ? parseFloat(data.price) : null,
-            startDate: data.startDate || null,
-            endDate: data.endDate || null,
-            allowDropIn: data.allowDropIn === "on" || data.allowDropIn === true,
+            title: course.title,
+            description: course.description,
+            level: course.level,
+            type: course.type,
+            location: course.location || null,
+            price: course.price ? parseFloat(course.price) : null,
+            startDate: course.startDate || null,
+            endDate: course.endDate || null,
+            allowDropIn: course.allowDropIn === "on" || course.allowDropIn === true,
             sessionIds: [],
         });
     },
 
-    async updateCourse(courseId, data) {
+    async updateCourse(courseId, course) {
         const updateData = {};
-
-        if (data.title !== undefined) updateData.title = data.title;
-        if (data.description !== undefined) updateData.description = data.description;
-        if (data.level !== undefined) updateData.level = data.level;
-        if (data.type !== undefined) updateData.type = data.type;
-        if (data.location !== undefined) updateData.location = data.location || null;
-        if (data.price !== undefined) updateData.price = data.price ? parseFloat(data.price) : null;
-        if (data.startDate !== undefined) updateData.startDate = data.startDate || null;
-        if (data.endDate !== undefined) updateData.endDate = data.endDate || null;
-        if (data.allowDropIn !== undefined) updateData.allowDropIn = data.allowDropIn === "on" || data.allowDropIn === true;
-        if (data.sessionIds !== undefined) updateData.sessionIds = data.sessionIds;
+        if (course.title !== undefined) updateData.title = course.title;
+        if (course.description !== undefined) updateData.description = course.description;
+        if (course.level !== undefined) updateData.level = course.level;
+        if (course.type !== undefined) updateData.type = course.type;
+        if (course.location !== undefined) updateData.location = course.location || null;
+        if (course.price !== undefined) updateData.price = course.price ? parseFloat(course.price) : null;
+        if (course.startDate !== undefined) updateData.startDate = course.startDate || null;
+        if (course.endDate !== undefined) updateData.endDate = course.endDate || null;
+        if (course.allowDropIn !== undefined) updateData.allowDropIn = course.allowDropIn === "on" || course.allowDropIn === true;
+        if (course.sessionIds !== undefined) updateData.sessionIds = course.sessionIds;
 
         await CourseModel.update(courseId, updateData);
         return this.getCourseById(courseId);
@@ -154,9 +130,7 @@ export const CourseService = {
 
     async deleteCourse(courseId) {
         const sessions = await SessionModel.listByCourse(courseId);
-        for (const session of sessions) {
-            await SessionModel.delete(session._id);
-        }
+        await Promise.all(sessions.map(s => SessionModel.delete(s._id)));
         return CourseModel.delete(courseId);
     },
 };

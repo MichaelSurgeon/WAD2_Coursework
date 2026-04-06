@@ -6,10 +6,8 @@ import usersRoutes from "./users.js";
 
 const router = Router();
 
-// All admin routes require organiser role
 router.use(verifyOrganiser);
 
-// Sub-routes
 router.use("/", dashboardRoutes);
 router.use("/courses", coursesRoutes);
 router.use("/users", usersRoutes);
