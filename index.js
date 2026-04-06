@@ -1,8 +1,6 @@
-// Core Node modules
 import path from "path";
 import { fileURLToPath } from "url";
 
-// Third-party packages
 import express from "express";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
@@ -30,7 +28,6 @@ app.engine(
 app.set("view engine", "mustache");
 app.set("views", path.join(__dirname, "views"));
 
-// Security: Limit request sizes to prevent DoS attacks
 app.use(express.urlencoded({ extended: false, limit: "10kb" }));
 app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
