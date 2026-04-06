@@ -4,7 +4,7 @@ import { ValidationService } from "../services/validationService.js";
 import { sendRenderError } from "../helpers/errorHandlers.js";
 
 const formatUserForAdmin = (user) => ({
-    id: user._id,
+    _id: user._id,
     username: user.username,
     email: user.email,
     role: user.role,
@@ -23,7 +23,7 @@ export const listUsers = async (req, res, next) => {
                 const formattedUser = formatUserForAdmin(u);
                 return {
                     ...formattedUser,
-                    isCurrentUser: formattedUser.id === currentUserId,
+                    isCurrentUser: formattedUser._id === currentUserId,
                 };
             }),
         });

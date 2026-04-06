@@ -93,10 +93,12 @@
               <td class="text-center">{{description}}</td>
               <td class="text-center">{{priceDisplay}}</td>
               <td class="text-center">
-                <a href="/admin/courses/{{courseId}}/sessions/{{_id}}/edit" class="btn btn-secondary">Edit</a>
-                <form method="post" action="/admin/courses/{{courseId}}/sessions/{{_id}}/delete" class="delete-form">
-                  <button class="btn btn-delete" type="submit">Delete</button>
-                </form>
+                <div class="session-action-buttons">
+                  <a href="/admin/courses/{{courseId}}/sessions/{{_id}}/edit" class="btn btn-secondary">Edit</a>
+                  <form method="post" action="/admin/courses/{{courseId}}/sessions/{{_id}}/delete" class="delete-form">
+                    <button class="btn btn-delete" type="submit">Delete</button>
+                  </form>
+                </div>
               </td>
             </tr>
             {{/items}}

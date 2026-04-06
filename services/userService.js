@@ -4,7 +4,7 @@ export const UserService = {
     async getAllUsers() {
         const users = await UserModel.list();
         return users.map((u) => ({
-            id: u._id,
+            _id: u._id,
             username: u.username,
             email: u.email,
             role: u.role,

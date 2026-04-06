@@ -39,6 +39,28 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
+    margin: 0;
+}
+
+.session-action-buttons {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.session-action-buttons .btn {
+    width: 104px;
+    box-sizing: border-box;
+}
+
+.session-action-buttons .delete-form {
+    width: 104px;
+}
+
+.session-action-buttons .delete-form .btn {
+    width: 100%;
 }
 
 .user-placeholder {
