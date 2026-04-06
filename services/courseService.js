@@ -44,8 +44,8 @@ export const CourseService = {
         return formattedCourses;
     },
 
-    async getCoursesPaginated(page, pageSize) {
-        const result = await CourseModel.getPaginatedCourses(page, pageSize);
+    async getCoursesPaginated(page, pageSize, filters = {}) {
+        const result = await CourseModel.getPaginatedCourses(page, pageSize, filters);
         return {
             ...result,
             items: result.items.map(course => formatCourseData(course, course.sessionIds?.length || 0)),

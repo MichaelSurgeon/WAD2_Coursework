@@ -5,6 +5,39 @@
   <div class="container-lg">
     <h1 class="m-top-2 m-bottom-1">Browse Yoga Courses</h1>
 
+    <section class="card m-bottom-1" aria-label="Filter courses">
+      <form method="get" action="/courses" class="card-section grid-auto align-center">
+        <div class="field m-0">
+          <label for="q" class="form-field-label">Search</label>
+          <input id="q" name="q" type="text" class="form-field-input" value="{{filters.q}}" placeholder="Title or description">
+        </div>
+
+        <div class="field m-0">
+          <label for="level" class="form-field-label">Level</label>
+          <select id="level" name="level" class="form-field-select">
+            <option value="">All levels</option>
+            <option value="beginner" {{#filters.levelBeginner}}selected{{/filters.levelBeginner}}>Beginner</option>
+            <option value="intermediate" {{#filters.levelIntermediate}}selected{{/filters.levelIntermediate}}>Intermediate</option>
+            <option value="advanced" {{#filters.levelAdvanced}}selected{{/filters.levelAdvanced}}>Advanced</option>
+          </select>
+        </div>
+
+        <div class="field m-0">
+          <label for="type" class="form-field-label">Type</label>
+          <select id="type" name="type" class="form-field-select">
+            <option value="">All types</option>
+            <option value="WEEKLY_BLOCK" {{#filters.typeWeeklyBlock}}selected{{/filters.typeWeeklyBlock}}>Weekly Block</option>
+            <option value="WEEKEND_WORKSHOP" {{#filters.typeWeekendWorkshop}}selected{{/filters.typeWeekendWorkshop}}>Weekend Workshop</option>
+          </select>
+        </div>
+
+        <div class="flex-row align-center gap-0-5 m-top-1">
+          <button type="submit" class="btn btn-primary">Apply Filters</button>
+          <a href="/courses" class="btn btn-secondary">Clear</a>
+        </div>
+      </form>
+    </section>
+
     <section aria-label="Course results" class="cards">
       {{#courses}}{{> courseCard}}{{/courses}}
       {{^courses}}<p class="empty-message">No courses found.</p>{{/courses}}
