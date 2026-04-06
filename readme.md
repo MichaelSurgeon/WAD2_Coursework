@@ -67,6 +67,11 @@ http://localhost:3000
 https://wad2-coursework-fivj.onrender.com/
 ```
 
+2. Login as test user/admin
+
+username: admin / user
+pass: admin / user
+
 # Features Implemented
 The current yoga application includes the following features:
 
