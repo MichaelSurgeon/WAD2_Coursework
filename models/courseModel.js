@@ -68,6 +68,11 @@ function getFilteredQuery(filters) {
     query.allowDropIn = filters.allowDropIn;
   }
 
+  if (filters.q?.trim()) {
+    const q = filters.q.trim();
+    query.$or = [{ title: new RegExp(q, "i") }, { description: new RegExp(q, "i") }];
+  }
+
   return query;
 }
 

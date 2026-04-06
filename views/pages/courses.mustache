@@ -16,9 +16,9 @@
             <label for="level" class="form-field-label">Level</label>
             <select name="level" id="level" class="form-field-select">
               <option value="" {{^filters.level}}selected{{/filters.level}}>Any Level</option>
-              <option value="beginner" {{#filters.level}}{{#isBeginner}}selected{{/isBeginner}}{{/filters.level}}>Beginner</option>
-              <option value="intermediate" {{#filters.level}}{{#isIntermediate}}selected{{/isIntermediate}}{{/filters.level}}>Intermediate</option>
-              <option value="advanced" {{#filters.level}}{{#isAdvanced}}selected{{/isAdvanced}}{{/filters.level}}>Advanced</option>
+              <option value="beginner" {{#filters.isBeginner}}selected{{/filters.isBeginner}}>Beginner</option>
+              <option value="intermediate" {{#filters.isIntermediate}}selected{{/filters.isIntermediate}}>Intermediate</option>
+              <option value="advanced" {{#filters.isAdvanced}}selected{{/filters.isAdvanced}}>Advanced</option>
             </select>
           </div>
 
@@ -26,8 +26,8 @@
             <label for="type" class="form-field-label">Course Type</label>
             <select name="type" id="type" class="form-field-select">
               <option value="" {{^filters.type}}selected{{/filters.type}}>Any Type</option>
-              <option value="WEEKLY_BLOCK" {{#filters.type}}{{#isWeekly}}selected{{/isWeekly}}{{/filters.type}}>Weekly Block</option>
-              <option value="WEEKEND_WORKSHOP" {{#filters.type}}{{#isWeekend}}selected{{/isWeekend}}{{/filters.type}}>Weekend Workshop</option>
+              <option value="WEEKLY_BLOCK" {{#filters.isWeekly}}selected{{/filters.isWeekly}}>Weekly Block</option>
+              <option value="WEEKEND_WORKSHOP" {{#filters.isWeekend}}selected{{/filters.isWeekend}}>Weekend Workshop</option>
             </select>
           </div>
 
@@ -35,8 +35,8 @@
             <label for="dropin" class="form-field-label">Drop-in Availability</label>
             <select name="dropin" id="dropin" class="form-field-select">
               <option value="" {{^filters.dropin}}selected{{/filters.dropin}}>Any</option>
-              <option value="yes" {{#filters.dropin}}{{#isYes}}selected{{/isYes}}{{/filters.dropin}}>Drop-in Available</option>
-              <option value="no" {{#filters.dropin}}{{#isNo}}selected{{/isNo}}{{/filters.dropin}}>Full Course Only</option>
+              <option value="yes" {{#filters.isYes}}selected{{/filters.isYes}}>Drop-in Available</option>
+              <option value="no" {{#filters.isNo}}selected{{/filters.isNo}}>Full Course Only</option>
             </select>
           </div>
         </div>
