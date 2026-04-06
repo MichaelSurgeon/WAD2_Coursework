@@ -23,15 +23,13 @@ export const CourseModel = {
     if (limit) query = query.limit(limit);
     return query;
   },
-  async getPaginatedCourses(page, pageSize, filters = {}) {
+  async getPaginatedCourses(page, pageSize) {
     const p = Math.max(1, parseInt(page, 10) || 1);
     const ps = Math.max(1, parseInt(pageSize, 10) || 4);
 
-    const query = getFilteredQuery(filters);
-
     const [items, total] = await Promise.all([
-      coursesDb.find(query).skip((p - 1) * ps).limit(ps),
-      coursesDb.count(query)
+      coursesDb.find({}).skip((p - 1) * ps).limit(ps),
+      coursesDb.count({})
     ]);
 
     const totalPages = Math.ceil(total / ps) || 1;
@@ -53,26 +51,4 @@ export const CourseModel = {
     };
   }
 };
-
-function getFilteredQuery(filters) {
-  const query = {};
-  if (filters.level) {
-    query.level = filters.level;
-  }
-
-  if (filters.type) {
-    query.type = filters.type;
-  }
-
-  if (filters.allowDropIn !== undefined) {
-    query.allowDropIn = filters.allowDropIn;
-  }
-
-  if (filters.q?.trim()) {
-    const q = filters.q.trim();
-    query.$or = [{ title: new RegExp(q, "i") }, { description: new RegExp(q, "i") }];
-  }
-
-  return query;
-}
 

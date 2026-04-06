@@ -44,14 +44,14 @@ app.get("/health", (req, res) => res.json({ ok: true }));
 app.use("/", viewRoutes);
 app.use("/admin", adminRoutes);
 
-export const not_found = (req, res) =>
+export const notFound = (req, res) =>
   res.status(404).render("pages/error", {
     title: "Page Not Found",
     message: "The page you're looking for doesn't exist.",
   });
 
 // eslint-disable-next-line no-unused-vars
-export const server_error = (err, req, res, next) => {
+export const serverError = (err, req, res, next) => {
   console.error(err);
   const isDev = process.env.NODE_ENV !== "production";
   res.status(500).render("pages/error", {
@@ -59,8 +59,8 @@ export const server_error = (err, req, res, next) => {
     message: isDev ? err.message : "An error occurred. Please try again later.",
   });
 };
-app.use(not_found);
-app.use(server_error);
+app.use(notFound);
+app.use(serverError);
 
 if (process.env.NODE_ENV !== "test") {
   const PORT = process.env.PORT || 3000;

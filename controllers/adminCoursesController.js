@@ -1,12 +1,8 @@
 import { CourseService } from "../services/courseService.js";
 import { SessionService } from "../services/sessionService.js";
 import { ValidationService } from "../services/validationService.js";
-import { CourseModel } from "../models/courseModel.js";
-import { SessionModel } from "../models/sessionModel.js";
-import { BookingModel } from "../models/bookingModel.js";
-import { UserModel } from "../models/userModel.js";
 import { sendRenderError } from "../helpers/errorHandlers.js";
-import { fmtDateOnly, fmtDateForInput } from "../utils/dateFormatter.js";
+import { fmtDateOnly } from "../utils/dateFormatter.js";
 
 const renderCourseForm = (res, course, options = {}) => {
     const { title, user, errors, isEdit } = options;
@@ -33,7 +29,7 @@ const buildSessionsRenderData = (user, course, formattedSessions, errors = null)
         title: `Add Sessions: ${course.title}`,
         user,
         course: {
-            id: course.id,
+            _id: course._id,
             title: course.title,
             startDate: fmtDateOnly(course.startDate),
             endDate: fmtDateOnly(course.endDate),
@@ -72,23 +68,27 @@ export const listCourses = async (req, res, next) => {
     }
 };
 
-export const showAddCoursePage = (req, res) => {
-    const defaultCourse = {
-        title: "Example Course",
-        description: "Explain about the course",
-        level: "beginner",
-        type: "WEEKLY_BLOCK",
-        startDate: "",
-        endDate: "",
-        price: "",
-        location: "",
-        allowDropIn: false,
-    };
+export const showAddCoursePage = (req, res, next) => {
+    try {
+        const defaultCourse = {
+            title: "Example Course",
+            description: "Explain about the course",
+            level: "beginner",
+            type: "WEEKLY_BLOCK",
+            startDate: "",
+            endDate: "",
+            price: "",
+            location: "",
+            allowDropIn: false,
+        };
 
-    renderCourseForm(res, defaultCourse, {
-        title: "Add Course",
-        user: req.user,
-    });
+        renderCourseForm(res, defaultCourse, {
+            title: "Add Course",
+            user: req.user,
+        });
+    } catch (err) {
+        next(err);
+    }
 };
 
 export const postAddCourse = async (req, res, next) => {
@@ -113,25 +113,13 @@ export const postAddCourse = async (req, res, next) => {
 
 export const showEditCoursePage = async (req, res, next) => {
     try {
-        const rawCourse = await CourseModel.findById(req.params.id);
-
-        if (!rawCourse) {
+        const course = await CourseService.getCourseForEdit(req.params.id);
+        if (!course) {
             return sendRenderError(res, "Course not found");
         }
 
-        renderCourseForm(res, {
-            id: rawCourse._id,
-            title: rawCourse.title,
-            description: rawCourse.description,
-            level: rawCourse.level,
-            type: rawCourse.type,
-            startDate: fmtDateForInput(rawCourse.startDate),
-            endDate: fmtDateForInput(rawCourse.endDate),
-            price: rawCourse.price || "",
-            location: rawCourse.location || "",
-            allowDropIn: rawCourse.allowDropIn,
-        }, {
-            title: `Edit Course: ${rawCourse.title}`,
+        renderCourseForm(res, course, {
+            title: `Edit Course: ${course.title}`,
             user: req.user,
             isEdit: true,
         });
@@ -179,7 +167,7 @@ export const showAddSessionsPage = async (req, res, next) => {
         }
 
         const sessions = await SessionService.listByCourse(req.params.id);
-        const mappedSessions = SessionService.formatSessionsForAdmin(sessions, course.id);
+        const mappedSessions = SessionService.formatSessionsForAdmin(sessions, course._id);
         const renderData = buildSessionsRenderData(req.user, course, mappedSessions);
 
         res.render("pages/admin/course-sessions", renderData);
@@ -190,30 +178,17 @@ export const showAddSessionsPage = async (req, res, next) => {
 
 export const postAddSession = async (req, res, next) => {
     try {
-        const { startDateTime, endDateTime, capacity, location } = req.body;
-
-        if (!startDateTime || !endDateTime || !capacity) {
+        const validationErrors = ValidationService.validateSession(req.body);
+        if (validationErrors) {
             const course = await CourseService.getCourseById(req.params.id);
             const sessions = await SessionService.listByCourse(req.params.id);
-            const mappedSessions = SessionService.formatSessionsForAdmin(sessions, course.id);
-            const errorRenderData = buildSessionsRenderData(req.user, course, mappedSessions, "All session fields are required");
+            const mappedSessions = SessionService.formatSessionsForAdmin(sessions, course._id);
+            const errorRenderData = buildSessionsRenderData(req.user, course, mappedSessions, validationErrors);
 
             return res.render("pages/admin/course-sessions", errorRenderData);
         }
 
-        await SessionModel.create({
-            courseId: req.params.id,
-            startDateTime,
-            endDateTime,
-            capacity: parseInt(capacity, 10),
-            location: location || null,
-            bookedCount: 0,
-        });
-
-        const updatedSessions = await SessionService.listByCourse(req.params.id);
-        await CourseService.updateCourse(req.params.id, {
-            sessionIds: updatedSessions.map(s => s._id),
-        });
+        await SessionService.createSessionForCourse(req.params.id, req.body);
 
         res.redirect(`/admin/courses/${req.params.id}/sessions`);
     } catch (err) {
@@ -223,20 +198,11 @@ export const postAddSession = async (req, res, next) => {
 
 export const deleteSession = async (req, res, next) => {
     try {
-        const sessions = await SessionService.listByCourse(req.params.id);
-        const isLastSession = sessions.length === 1;
+        const deleteResult = await SessionService.deleteSessionFromCourse(req.params.id, req.params.sessionId);
 
-        await SessionService.deleteSession(req.params.sessionId);
-
-        if (isLastSession) {
-            await CourseService.deleteCourse(req.params.id);
+        if (deleteResult.courseDeleted) {
             return res.redirect("/admin/courses");
         }
-
-        const updatedSessions = await SessionService.listByCourse(req.params.id);
-        await CourseService.updateCourse(req.params.id, {
-            sessionIds: updatedSessions.map(s => s._id),
-        });
 
         res.redirect(`/admin/courses/${req.params.id}/sessions`);
     } catch (err) {
@@ -246,31 +212,19 @@ export const deleteSession = async (req, res, next) => {
 
 export const getClassList = async (req, res, next) => {
     try {
-        const course = await CourseModel.findById(req.params.id);
-
-        if (!course) {
-            return sendRenderError(res, "Course not found");
-        }
-
-        const bookings = await BookingModel.findByCourse(req.params.id);
-        const userIds = bookings.map(b => b.userId);
-        const users = await UserModel.findByIds(userIds);
-        const participants = bookings.map(booking => {
-            const user = users.find(u => u._id === booking.userId);
-            return { username: user?.username || "N/A", email: user?.email || "N/A" };
-        });
+        const classList = await CourseService.getClassListByCourseId(req.params.id);
 
         res.render("pages/admin/class-list", {
-            title: `Class List: ${course.title}`,
+            title: `Class List: ${classList.course.title}`,
             user: req.user,
-            course: {
-                title: course.title,
-                id: course._id,
-            },
-            participants,
-            count: participants.length,
+            course: classList.course,
+            participants: classList.participants,
+            count: classList.count,
         });
     } catch (err) {
+        if (err.code === "NOT_FOUND") {
+            return sendRenderError(res, "Course not found");
+        }
         next(err);
     }
 };

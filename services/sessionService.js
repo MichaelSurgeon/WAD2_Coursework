@@ -7,29 +7,43 @@ export const SessionService = {
         return SessionModel.listByCourse(courseId);
     },
 
-    async getSessionById(sessionId) {
-        const session = await SessionModel.findById(sessionId);
-        if (!session) return null;
+    async createSessionForCourse(courseId, data) {
+        const { startDateTime, endDateTime, capacity, location } = data;
 
-        const course = await CourseModel.findById(session.courseId);
+        const createdSession = await SessionModel.create({
+            courseId,
+            startDateTime,
+            endDateTime,
+            capacity: parseInt(capacity, 10),
+            location: location || null,
+            bookedCount: 0,
+        });
 
-        return {
-            _id: session._id,
-            courseId: session.courseId,
-            courseName: course?.title,
-            startDateTime: session.startDateTime,
-            endDateTime: session.endDateTime,
-            start: fmtDate(session.startDateTime),
-            end: fmtDate(session.endDateTime),
-            capacity: session.capacity,
-            booked: session.bookedCount ?? 0,
-            remaining: Math.max(0, (session.capacity ?? 0) - (session.bookedCount ?? 0)),
-            isFull: (session.bookedCount ?? 0) >= (session.capacity ?? 0),
-        };
+        const updatedSessions = await SessionModel.listByCourse(courseId);
+        await CourseModel.update(courseId, {
+            sessionIds: updatedSessions.map((session) => session._id),
+        });
+
+        return createdSession;
     },
 
-    async deleteSession(sessionId) {
-        return SessionModel.delete(sessionId);
+    async deleteSessionFromCourse(courseId, sessionId) {
+        const sessions = await SessionModel.listByCourse(courseId);
+        const isLastSession = sessions.length === 1;
+
+        await SessionModel.delete(sessionId);
+
+        if (isLastSession) {
+            await CourseModel.delete(courseId);
+            return { courseDeleted: true };
+        }
+
+        const updatedSessions = await SessionModel.listByCourse(courseId);
+        await CourseModel.update(courseId, {
+            sessionIds: updatedSessions.map((session) => session._id),
+        });
+
+        return { courseDeleted: false };
     },
 
     formatSessionForAdmin(session, courseId) {

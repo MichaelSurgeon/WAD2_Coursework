@@ -108,6 +108,44 @@ export const ValidationService = {
         return errors.length > 0 ? errors : null;
     },
 
+    validateSession(data) {
+        const errors = [];
+
+        if (!data.startDateTime) {
+            errors.push("Session start date and time is required");
+        }
+
+        if (!data.endDateTime) {
+            errors.push("Session end date and time is required");
+        }
+
+        if (!data.capacity) {
+            errors.push("Session capacity is required");
+        } else {
+            const parsedCapacity = parseInt(data.capacity, 10);
+            if (Number.isNaN(parsedCapacity)) {
+                errors.push("Session capacity must be a valid number");
+            } else if (parsedCapacity < 1) {
+                errors.push("Session capacity must be at least 1");
+            }
+        }
+
+        if (data.startDateTime && data.endDateTime) {
+            const start = new Date(data.startDateTime);
+            const end = new Date(data.endDateTime);
+
+            if (Number.isNaN(start.getTime())) {
+                errors.push("Invalid session start date format");
+            } else if (Number.isNaN(end.getTime())) {
+                errors.push("Invalid session end date format");
+            } else if (end <= start) {
+                errors.push("Session end time must be after start time");
+            }
+        }
+
+        return errors.length > 0 ? errors : null;
+    },
+
     isValidEmail(email) {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email);

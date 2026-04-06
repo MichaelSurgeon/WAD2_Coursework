@@ -1,8 +1,12 @@
 import { AuthService } from "../services/authService.js";
 import { ValidationService } from "../services/validationService.js";
 
-export const loginPage = (req, res) => {
-    res.render("pages/auth/login", { title: "Login" });
+export const loginPage = (req, res, next) => {
+    try {
+        res.render("pages/auth/login", { title: "Login" });
+    } catch (err) {
+        next(err);
+    }
 };
 
 export const loginHandler = async (req, res, next) => {
@@ -28,8 +32,12 @@ export const loginHandler = async (req, res, next) => {
     }
 };
 
-export const registerPage = (req, res) => {
-    res.render("pages/auth/register", { title: "Register" });
+export const registerPage = (req, res, next) => {
+    try {
+        res.render("pages/auth/register", { title: "Register" });
+    } catch (err) {
+        next(err);
+    }
 };
 
 export const registerHandler = async (req, res, next) => {
@@ -56,11 +64,19 @@ export const registerHandler = async (req, res, next) => {
     }
 };
 
-export const logoutConfirmationPage = (req, res) => {
-    res.render("pages/logout-confirmation", { title: "Logout Confirmation" });
+export const logoutConfirmationPage = (req, res, next) => {
+    try {
+        res.render("pages/logout-confirmation", { title: "Logout Confirmation" });
+    } catch (err) {
+        next(err);
+    }
 };
 
-export const logout = (req, res) => {
-    res.clearCookie("jwt");
-    res.redirect("/login");
+export const logout = (req, res, next) => {
+    try {
+        res.clearCookie("jwt");
+        res.redirect("/login");
+    } catch (err) {
+        next(err);
+    }
 };

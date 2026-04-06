@@ -34,11 +34,15 @@ export const listUsers = async (req, res, next) => {
     }
 };
 
-export const showAddUserPage = (req, res) => {
-    res.render("pages/admin/user-form", {
-        title: "Add User",
-        user: req.user,
-    });
+export const showAddUserPage = (req, res, next) => {
+    try {
+        res.render("pages/admin/user-form", {
+            title: "Add User",
+            user: req.user,
+        });
+    } catch (err) {
+        next(err);
+    }
 };
 
 export const postAddUser = async (req, res, next) => {

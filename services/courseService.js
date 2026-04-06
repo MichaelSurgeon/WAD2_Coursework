@@ -1,6 +1,8 @@
 import { CourseModel } from "../models/courseModel.js";
 import { SessionModel } from "../models/sessionModel.js";
-import { fmtDate, fmtDateOnly } from "../utils/dateFormatter.js";
+import { BookingModel } from "../models/bookingModel.js";
+import { UserModel } from "../models/userModel.js";
+import { fmtDate, fmtDateOnly, fmtDateForInput } from "../utils/dateFormatter.js";
 
 const calculateDurationWeeks = (startDate, endDate) => {
     if (!startDate || !endDate) return null;
@@ -58,8 +60,8 @@ export const CourseService = {
         return formattedCourses;
     },
 
-    async getCoursesPaginated(page, pageSize, filters = {}) {
-        const result = await CourseModel.getPaginatedCourses(page, pageSize, filters);
+    async getCoursesPaginated(page, pageSize) {
+        const result = await CourseModel.getPaginatedCourses(page, pageSize);
         return {
             ...result,
             items: result.items.map(course => formatCourseData(course, course.sessionIds?.length || 0)),
@@ -93,6 +95,54 @@ export const CourseService = {
                 allowDropIn: course.allowDropIn,
                 pricePerSession: course.allowDropIn ? formatted.pricePerSession : null,
             })),
+        };
+    },
+
+    async getCourseForEdit(courseId) {
+        const course = await CourseModel.findById(courseId);
+        if (!course)
+            return null;
+
+        return {
+            _id: course._id,
+            title: course.title,
+            description: course.description,
+            level: course.level,
+            type: course.type,
+            startDate: fmtDateForInput(course.startDate),
+            endDate: fmtDateForInput(course.endDate),
+            price: course.price || "",
+            location: course.location || "",
+            allowDropIn: course.allowDropIn,
+        };
+    },
+
+    async getClassListByCourseId(courseId) {
+        const course = await CourseModel.findById(courseId);
+        if (!course) {
+            const err = new Error("Course not found");
+            err.code = "NOT_FOUND";
+            throw err;
+        }
+
+        const bookings = await BookingModel.findByCourse(courseId);
+        const userIds = bookings.map((booking) => booking.userId);
+        const users = userIds.length > 0 ? await UserModel.findByIds(userIds) : [];
+        const participants = bookings.map((booking) => {
+            const user = users.find((u) => u._id === booking.userId);
+            return {
+                username: user?.username || "N/A",
+                email: user?.email || "N/A",
+            };
+        });
+
+        return {
+            course: {
+                _id: course._id,
+                title: course.title,
+            },
+            participants,
+            count: participants.length,
         };
     },
 
