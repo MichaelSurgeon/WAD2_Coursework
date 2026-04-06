@@ -42,19 +42,6 @@ export const ValidationService = {
             errors.push("Invalid course type");
         }
 
-        if (data.price !== null && data.price !== undefined && data.price !== "") {
-            const price = parseFloat(data.price);
-            if (price < 0) {
-                errors.push("Price cannot be negative");
-            } else if (price > 99999) {
-                errors.push("Price is too high");
-            }
-        }
-
-        if (data.location && data.location.length > 200) {
-            errors.push("Location must be 200 characters or less");
-        }
-
         if (data.startDate && data.endDate) {
             this._validateDateRange(data.startDate, data.endDate, errors);
         }
@@ -114,12 +101,29 @@ export const ValidationService = {
         if (!data.capacity) {
             errors.push("Session capacity is required");
         } else {
-            const parsedCapacity = parseInt(data.capacity, 10);
-            if (isNaN(parsedCapacity)) {
-                errors.push("Session capacity must be a valid number");
-            } else if (parsedCapacity < 1) {
+            const capacity = parseInt(data.capacity, 10);
+            if (isNaN(capacity) || capacity < 1) {
                 errors.push("Session capacity must be at least 1");
             }
+        }
+
+        if (!data.location?.trim()) {
+            errors.push("Session location is required");
+        } else if (data.location.length > 200) {
+            errors.push("Session location must be 200 characters or less");
+        }
+
+        if (!data.description?.trim()) {
+            errors.push("Session description is required");
+        } else if (data.description.length > 2000) {
+            errors.push("Session description must be 2000 characters or less");
+        }
+
+        const price = parseFloat(data.price);
+        if (!data.price || data.price === "") {
+            errors.push("Session price is required");
+        } else if (isNaN(price) || price < 0 || price > 99999) {
+            errors.push("Session price must be between 0 and 99999");
         }
 
         if (data.startDateTime && data.endDateTime) {

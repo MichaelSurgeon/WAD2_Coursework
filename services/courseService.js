@@ -15,27 +15,12 @@ const getDurationDisplay = (startDate, endDate) => {
 };
 
 const formatCourseData = (course, sessionCount) => {
-    const pricePerSession = course.price && sessionCount ? (course.price / sessionCount).toFixed(2) : null;
-
-    let priceDisplay;
-    if (course.allowDropIn && pricePerSession) {
-        priceDisplay = `£${pricePerSession}/session or £${course.price} for full course`;
-    } else if (course.price) {
-        priceDisplay = `£${course.price}`;
-    } else {
-        priceDisplay = null;
-    }
-
     return {
         _id: course._id,
         title: course.title,
         level: course.level,
         type: course.type,
         description: course.description,
-        location: course.location,
-        price: course.price,
-        pricePerSession,
-        priceDisplay,
         allowDropIn: course.allowDropIn,
         startDate: course.startDate ? fmtDateOnly(course.startDate) : "",
         endDate: course.endDate ? fmtDateOnly(course.endDate) : "",
@@ -91,8 +76,10 @@ export const CourseService = {
                 isFull: (s.bookedCount ?? 0) >= (s.capacity ?? 0),
                 startIso: s.startDateTime,
                 endIso: s.endDateTime,
+                location: s.location || "",
+                description: s.description || "",
+                priceDisplay: s.price === undefined || s.price === null ? "-" : `£${Number(s.price).toFixed(2)}`,
                 allowDropIn: course.allowDropIn,
-                pricePerSession: course.allowDropIn ? formatted.pricePerSession : null,
             })),
         };
     },
@@ -110,19 +97,14 @@ export const CourseService = {
             type: course.type,
             startDate: fmtDateForInput(course.startDate),
             endDate: fmtDateForInput(course.endDate),
-            price: course.price || "",
-            location: course.location || "",
             allowDropIn: course.allowDropIn,
         };
     },
 
     async getClassListByCourseId(courseId) {
         const course = await CourseModel.findById(courseId);
-        if (!course) {
-            const err = new Error("Course not found");
-            err.code = "NOT_FOUND";
-            throw err;
-        }
+        if (!course)
+            return null;
 
         const bookings = await BookingModel.findByCourse(courseId);
         const userIds = bookings.map((booking) => booking.userId);
@@ -151,8 +133,6 @@ export const CourseService = {
             description: course.description,
             level: course.level,
             type: course.type,
-            location: course.location || null,
-            price: course.price ? parseFloat(course.price) : null,
             startDate: course.startDate || null,
             endDate: course.endDate || null,
             allowDropIn: course.allowDropIn === "on" || course.allowDropIn === true,
@@ -166,8 +146,6 @@ export const CourseService = {
         if (course.description !== undefined) updateData.description = course.description;
         if (course.level !== undefined) updateData.level = course.level;
         if (course.type !== undefined) updateData.type = course.type;
-        if (course.location !== undefined) updateData.location = course.location || null;
-        if (course.price !== undefined) updateData.price = course.price ? parseFloat(course.price) : null;
         if (course.startDate !== undefined) updateData.startDate = course.startDate || null;
         if (course.endDate !== undefined) updateData.endDate = course.endDate || null;
         if (course.allowDropIn !== undefined) updateData.allowDropIn = course.allowDropIn === "on" || course.allowDropIn === true;

@@ -13,8 +13,6 @@ const formatUserForAdmin = (user) => ({
 
 export const listUsers = async (req, res, next) => {
     try {
-        // Ran out of time: but pagination would be prefered here.
-
         const users = await UserService.getAllUsers();
         const currentUserId = req.user._id;
 

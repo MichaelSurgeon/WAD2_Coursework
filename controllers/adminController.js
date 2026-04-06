@@ -12,8 +12,8 @@ export const adminDashboard = async (req, res, next) => {
         res.render("pages/admin/dashboard", {
             title: "Admin Dashboard",
             user: req.user,
-            coursesCount: coursesCount,
-            usersCount: usersCount,
+            coursesCount,
+            usersCount,
         });
     } catch (err) {
         next(err);

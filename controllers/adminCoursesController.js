@@ -6,27 +6,44 @@ import { fmtDateOnly } from "../utils/dateFormatter.js";
 
 const renderCourseForm = (res, course, options = {}) => {
     const { title, user, errors, isEdit } = options;
-    const formData = {
-        ...course,
+    res.render("pages/admin/course-form", {
+        title,
+        user,
+        course,
         beginner: course.level === "beginner",
         intermediate: course.level === "intermediate",
         advanced: course.level === "advanced",
         block: course.type === "WEEKLY_BLOCK",
         workshop: course.type === "WEEKEND_WORKSHOP",
-    };
-    res.render("pages/admin/course-form", {
-        title,
-        user,
-        course: formData,
-        ...formData,
         ...(errors && { errors }),
         ...(isEdit && { isEdit }),
     });
 };
 
-const buildSessionsRenderData = (user, course, formattedSessions, errors = null) => {
+const loadSessionsForRender = async (courseId) => {
+    const course = await CourseService.getCourseById(courseId);
+    if (!course) return null;
+
+    const sessions = await SessionService.listByCourse(courseId);
+    const formatted = SessionService.formatSessionsForAdmin(sessions, courseId);
+    return { course, sessions: formatted };
+};
+
+const DEFAULT_SESSION_FORM = {
+    startDateTime: "",
+    endDateTime: "",
+    capacity: "18",
+    location: "",
+    description: "",
+    price: "",
+};
+
+const buildSessionsRenderData = (user, course, formattedSessions, options = {}) => {
+    const { errors = null, formValues = null, isEdit = false, editingSessionId = null } = options;
+    const sessionForm = formValues || DEFAULT_SESSION_FORM;
+
     const renderData = {
-        title: `Add Sessions: ${course.title}`,
+        title: `Manage Sessions: ${course.title}`,
         user,
         course: {
             _id: course._id,
@@ -34,13 +51,13 @@ const buildSessionsRenderData = (user, course, formattedSessions, errors = null)
             startDate: fmtDateOnly(course.startDate),
             endDate: fmtDateOnly(course.endDate),
         },
+        sessionForm,
+        isEditSession: isEdit,
+        ...(isEdit && { editingSessionId }),
     };
 
     if (formattedSessions.length > 0) {
-        renderData.sessionsList = {
-            items: formattedSessions,
-            count: formattedSessions.length,
-        };
+        renderData.sessionsList = { items: formattedSessions, count: formattedSessions.length };
     }
 
     if (errors) {
@@ -77,8 +94,6 @@ export const showAddCoursePage = (req, res, next) => {
             type: "WEEKLY_BLOCK",
             startDate: "",
             endDate: "",
-            price: "",
-            location: "",
             allowDropIn: false,
         };
 
@@ -158,18 +173,13 @@ export const deleteCourse = async (req, res, next) => {
     }
 };
 
-export const showAddSessionsPage = async (req, res, next) => {
+export const showSessionsPage = async (req, res, next) => {
     try {
-        const course = await CourseService.getCourseById(req.params.id);
-
-        if (!course) {
+        const data = await loadSessionsForRender(req.params.id);
+        if (!data)
             return sendRenderError(res, "Course not found");
-        }
 
-        const sessions = await SessionService.listByCourse(req.params.id);
-        const mappedSessions = SessionService.formatSessionsForAdmin(sessions, course._id);
-        const renderData = buildSessionsRenderData(req.user, course, mappedSessions);
-
+        const renderData = buildSessionsRenderData(req.user, data.course, data.sessions);
         res.render("pages/admin/course-sessions", renderData);
     } catch (err) {
         next(err);
@@ -180,18 +190,69 @@ export const postAddSession = async (req, res, next) => {
     try {
         const validationErrors = ValidationService.validateSession(req.body);
         if (validationErrors) {
-            const course = await CourseService.getCourseById(req.params.id);
-            const sessions = await SessionService.listByCourse(req.params.id);
-            const mappedSessions = SessionService.formatSessionsForAdmin(sessions, course._id);
-            const errorRenderData = buildSessionsRenderData(req.user, course, mappedSessions, validationErrors);
+            const data = await loadSessionsForRender(req.params.id);
+            if (!data)
+                return sendRenderError(res, "Course not found");
 
+            const errorRenderData = buildSessionsRenderData(req.user, data.course, data.sessions, {
+                errors: validationErrors,
+                formValues: req.body,
+            });
             return res.render("pages/admin/course-sessions", errorRenderData);
         }
 
         await SessionService.createSessionForCourse(req.params.id, req.body);
-
         res.redirect(`/admin/courses/${req.params.id}/sessions`);
     } catch (err) {
+        next(err);
+    }
+};
+
+export const showEditSessionPage = async (req, res, next) => {
+    try {
+        const data = await loadSessionsForRender(req.params.id);
+        if (!data)
+            return sendRenderError(res, "Course not found");
+
+        const session = await SessionService.getSessionForEdit(req.params.id, req.params.sessionId);
+        if (!session)
+            return sendRenderError(res, "Session not found");
+
+        const renderData = buildSessionsRenderData(req.user, data.course, data.sessions, {
+            formValues: session,
+            isEdit: true,
+            editingSessionId: req.params.sessionId,
+        });
+
+        res.render("pages/admin/course-sessions", renderData);
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const postEditSession = async (req, res, next) => {
+    try {
+        const validationErrors = ValidationService.validateSession(req.body);
+        if (validationErrors) {
+            const data = await loadSessionsForRender(req.params.id);
+            if (!data)
+                return sendRenderError(res, "Course not found");
+
+            const errorRenderData = buildSessionsRenderData(req.user, data.course, data.sessions, {
+                errors: validationErrors,
+                formValues: req.body,
+                isEdit: true,
+                editingSessionId: req.params.sessionId,
+            });
+            return res.render("pages/admin/course-sessions", errorRenderData);
+        }
+
+        await SessionService.updateSessionForCourse(req.params.id, req.params.sessionId, req.body);
+        res.redirect(`/admin/courses/${req.params.id}/sessions`);
+    } catch (err) {
+        if (err.code === "NOT_FOUND") {
+            return sendRenderError(res, "Session not found");
+        }
         next(err);
     }
 };
@@ -214,6 +275,10 @@ export const getClassList = async (req, res, next) => {
     try {
         const classList = await CourseService.getClassListByCourseId(req.params.id);
 
+        if (!classList) {
+            return sendRenderError(res, "Course not found");
+        }
+
         res.render("pages/admin/class-list", {
             title: `Class List: ${classList.course.title}`,
             user: req.user,
@@ -222,9 +287,6 @@ export const getClassList = async (req, res, next) => {
             count: classList.count,
         });
     } catch (err) {
-        if (err.code === "NOT_FOUND") {
-            return sendRenderError(res, "Course not found");
-        }
         next(err);
     }
 };

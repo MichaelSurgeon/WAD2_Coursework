@@ -17,31 +17,49 @@
     </div>
     {{/sessionsList}}
 
-    <form method="post" action="/admin/courses/{{course._id}}/sessions">
+    <form method="post" action="/admin/courses/{{course._id}}/sessions{{#isEditSession}}/{{editingSessionId}}/edit{{/isEditSession}}">
       <div class="card-section form-section">
-        <h3>Add New Session</h3>
+        <h3>{{#isEditSession}}Edit Session{{/isEditSession}}{{^isEditSession}}Add New Session{{/isEditSession}}</h3>
 
         <div class="admin-form-grid">
           <div class="field">
             <label for="startDateTime" class="form-field-label">Start Date & Time <span>*</span></label>
-            <input id="startDateTime" name="startDateTime" type="datetime-local" required class="form-field-input">
+            <input id="startDateTime" name="startDateTime" type="datetime-local" required class="form-field-input" value="{{sessionForm.startDateTime}}">
           </div>
 
           <div class="field">
             <label for="endDateTime" class="form-field-label">End Date & Time <span>*</span></label>
-            <input id="endDateTime" name="endDateTime" type="datetime-local" required class="form-field-input">
+            <input id="endDateTime" name="endDateTime" type="datetime-local" required class="form-field-input" value="{{sessionForm.endDateTime}}">
           </div>
 
           <div class="field">
             <label for="capacity" class="form-field-label">Capacity <span>*</span></label>
-            <input id="capacity" name="capacity" type="number" min="1" required value="18" class="form-field-input">
+            <input id="capacity" name="capacity" type="number" min="1" required class="form-field-input" value="{{sessionForm.capacity}}">
+          </div>
+
+          <div class="field">
+            <label for="location" class="form-field-label">Location <span>*</span></label>
+            <input id="location" name="location" type="text" required class="form-field-input" value="{{sessionForm.location}}">
+          </div>
+
+          <div class="field">
+            <label for="price" class="form-field-label">Price (£) <span>*</span></label>
+            <input id="price" name="price" type="number" step="0.01" min="0" required class="form-field-input" value="{{sessionForm.price}}">
+          </div>
+
+          <div class="field">
+            <label for="description" class="form-field-label">Description <span>*</span></label>
+            <input id="description" name="description" type="text" required class="form-field-input" value="{{sessionForm.description}}">
           </div>
         </div>
       </div>
 
       <div class="card-action">
         <div class="admin-btn-group">
-          <button class="btn btn-primary" type="submit">Add Session</button>
+          <button class="btn btn-primary" type="submit">{{#isEditSession}}Update Session{{/isEditSession}}{{^isEditSession}}Add Session{{/isEditSession}}</button>
+          {{#isEditSession}}
+          <a href="/admin/courses/{{course._id}}/sessions" class="btn btn-secondary">Cancel</a>
+          {{/isEditSession}}
         </div>
       </div>
     </form>
@@ -61,6 +79,8 @@
               <th>Date & Time</th>
               <th class="text-center">Capacity</th>
               <th class="text-center">Location</th>
+              <th class="text-center">Description</th>
+              <th class="text-center">Price</th>
               <th class="text-center">Action</th>
             </tr>
           </thead>
@@ -70,7 +90,10 @@
               <td>{{start}}</td>
               <td class="text-center">{{capacity}}</td>
               <td class="text-center">{{location}}</td>
+              <td class="text-center">{{description}}</td>
+              <td class="text-center">{{priceDisplay}}</td>
               <td class="text-center">
+                <a href="/admin/courses/{{courseId}}/sessions/{{_id}}/edit" class="btn btn-secondary">Edit</a>
                 <form method="post" action="/admin/courses/{{courseId}}/sessions/{{_id}}/delete" class="delete-form">
                   <button class="btn btn-delete" type="submit">Delete</button>
                 </form>

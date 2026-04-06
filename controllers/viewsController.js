@@ -64,8 +64,11 @@ export const postBookSession = async (req, res, next) => {
 
 export const bookingConfirmationPage = async (req, res, next) => {
   try {
-    const bookingId = req.params.bookingId;
-    const booking = await getBookingById(bookingId);
+    const booking = await getBookingById(req.params.bookingId);
+
+    if (!booking) {
+      return sendRenderError(res, "Booking not found");
+    }
 
     res.render("pages/booking-confirmation", {
       title: "Booking confirmation",

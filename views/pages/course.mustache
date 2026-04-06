@@ -2,7 +2,7 @@
 {{> header}}
 
 <main class="wrap">
-  <div class="page-container">
+  <div class="page-container page-container-wide">
     <div class="card m-bottom-2">
       <div class="card-header">
         <h1 class="m-0">{{course.title}}</h1>
@@ -17,18 +17,6 @@
 
       <div class="card-section">
         <div class="info-section">
-          {{#course.location}}
-          <div class="info-box">
-            <strong>📍 Location</strong>
-            <p class="m-top-0-5 info-value-muted">{{course.location}}</p>
-          </div>
-          {{/course.location}}
-          {{#course.priceDisplay}}
-          <div class="info-box">
-            <strong>💷 Pricing</strong>
-            <p class="m-top-0-5 info-value-muted">{{course.priceDisplay}}</p>
-          </div>
-          {{/course.priceDisplay}}
           {{#course.startDate}}
           <div class="info-box">
             <strong>📅 Duration</strong>
@@ -66,11 +54,14 @@
       </div>
 
       <div class="card-section table-scroll">
-        <table class="table">
+        <table class="table class-schedule-table">
           <thead>
             <tr>
               <th>Start Time</th>
               <th>End Time</th>
+              <th>Location</th>
+              <th>Description</th>
+              <th class="text-center">Price</th>
               <th class="text-center">Capacity</th>
               <th class="text-center">Booked</th>
               <th class="text-center">Available</th>
@@ -82,6 +73,9 @@
             <tr>
               <td><time datetime="{{startIso}}">{{start}}</time></td>
               <td><time datetime="{{endIso}}">{{end}}</time></td>
+              <td>{{location}}</td>
+              <td>{{description}}</td>
+              <td class="text-center">{{priceDisplay}}</td>
               <td class="text-center">{{capacity}}</td>
               <td class="text-center">{{booked}}</td>
               <td class="text-center">{{remaining}}</td>
