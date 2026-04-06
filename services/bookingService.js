@@ -11,9 +11,7 @@ export async function bookCourseForUser(userId, courseId) {
 
   const userBooking = await BookingModel.findByUserAndCourse(userId, courseId);
   if (userBooking) {
-    const err = new Error("User already booked this course");
-    err.code = "ALREADY_BOOKED";
-    throw err;
+    throw new Error("User already booked this course");
   }
 
   const sessions = await SessionModel.listByCourse(courseId);
@@ -41,9 +39,7 @@ export async function bookSessionForUser(userId, sessionId) {
 
   const userBooking = await BookingModel.findByUserAndCourse(userId, session.courseId);
   if (userBooking) {
-    const err = new Error("User already booked this session");
-    err.code = "ALREADY_BOOKED";
-    throw err;
+    throw new Error("User already booked this session");
   }
 
   const course = await CourseModel.findById(session.courseId);
@@ -51,9 +47,7 @@ export async function bookSessionForUser(userId, sessionId) {
     throw new Error("Course not found");
 
   if (!course.allowDropIn && course.type === "WEEKLY_BLOCK") {
-    const err = new Error("Drop-in not allowed for this course");
-    err.code = "DROPIN_NOT_ALLOWED";
-    throw err;
+    throw new Error("Drop-in not allowed for this course");
   }
 
   await SessionModel.incrementBookedCount(sessionId);
@@ -70,9 +64,7 @@ export async function bookSessionForUser(userId, sessionId) {
 export async function getBookingById(bookingId) {
   const booking = await BookingModel.findById(bookingId);
   if (!booking) {
-    const err = new Error("Booking not found");
-    err.code = "NOT_FOUND";
-    throw err;
+    throw new Error("Booking not found");
   }
   return booking;
 }

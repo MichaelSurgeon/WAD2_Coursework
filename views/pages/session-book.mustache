@@ -2,7 +2,7 @@
 {{> header}}
 
 <main class="wrap">
-  <div class="card" style="max-width: 700px; margin: 2rem auto;">
+  <div class="card card-medium">
     <div class="card-header">
       <h1>Confirm Session Booking</h1>
       <p class="page-header-subtitle">{{session.courseName}}</p>
@@ -12,10 +12,10 @@
 
     <div class="card-section">
       <h3>Session Information</h3>
-      <p style="color: #666; margin: 0;">
+      <p class="session-info-time">
         📅 {{session.start}} to {{session.end}}
       </p>
-      <p style="color: #666; margin: 1rem 0 0 0;">
+      <p class="session-info-capacity">
         Places available: <strong>{{session.remaining}}</strong> of {{session.capacity}}
       </p>
     </div>

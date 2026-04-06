@@ -12,7 +12,7 @@
       </div>
 
       <div class="card-section">
-        <p style="color: #666; margin: 0; line-height: 1.6;">{{course.description}}</p>
+        <p class="course-description-text">{{course.description}}</p>
       </div>
 
       <div class="card-section">
@@ -20,25 +20,25 @@
           {{#course.location}}
           <div class="info-box">
             <strong>📍 Location</strong>
-            <p class="m-top-0-5" style="color: #666;">{{course.location}}</p>
+            <p class="m-top-0-5 info-value-muted">{{course.location}}</p>
           </div>
           {{/course.location}}
           {{#course.priceDisplay}}
           <div class="info-box">
             <strong>💷 Pricing</strong>
-            <p class="m-top-0-5" style="color: #666;">{{course.priceDisplay}}</p>
+            <p class="m-top-0-5 info-value-muted">{{course.priceDisplay}}</p>
           </div>
           {{/course.priceDisplay}}
           {{#course.startDate}}
           <div class="info-box">
             <strong>📅 Duration</strong>
-            <p class="m-top-0-5" style="color: #666;">{{course.startDate}} – {{course.endDate}}</p>
+            <p class="m-top-0-5 info-value-muted">{{course.startDate}} – {{course.endDate}}</p>
           </div>
           {{/course.startDate}}
           {{#course.sessionsCount}}
           <div class="info-box">
             <strong>🧘 Sessions</strong>
-            <p class="m-top-0-5" style="color: #666;">{{course.sessionsCount}} total sessions</p>
+            <p class="m-top-0-5 info-value-muted">{{course.sessionsCount}} total sessions</p>
           </div>
           {{/course.sessionsCount}}
         </div>
@@ -46,7 +46,7 @@
 
       {{#user}}
       <div class="card-action">
-        <form action="/courses/{{course._id}}/book" method="post" style="width: 100%;">
+        <form action="/courses/{{course._id}}/book" method="post" class="full-width-form">
           <input type="hidden" name="userId" value="{{user._id}}">
           <button class="btn btn-primary btn-full-width" type="submit">Book This Course</button>
         </form>
@@ -61,11 +61,11 @@
 
     <div class="card">
       <div class="card-header">
-        <h2 style="margin: 0;">Class Schedule</h2>
-        <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">All available sessions for this course</p>
+        <h2 class="m-0">Class Schedule</h2>
+        <p class="schedule-subtitle">All available sessions for this course</p>
       </div>
 
-      <div class="card-section" style="overflow-x: auto;">
+      <div class="card-section table-scroll">
         <table class="table">
           <thead>
             <tr>

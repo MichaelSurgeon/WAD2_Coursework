@@ -1,9 +1,23 @@
-// services/validationService.js
 export const ValidationService = {
+    _validateDateRange(startDate, endDate, errors) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        if (isNaN(start.getTime())) {
+            errors.push("Invalid start date format");
+        } else if (isNaN(end.getTime())) {
+            errors.push("Invalid end date format");
+        } else if (end <= start) {
+            errors.push("End date must be after start date");
+        }
+    },
+
+    isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    },
+
     validateCourse(data) {
         const errors = [];
 
-        // Required fields
         if (!data.title?.trim()) {
             errors.push("Course title is required");
         } else if (data.title.length > 200) {
@@ -30,9 +44,7 @@ export const ValidationService = {
 
         if (data.price !== null && data.price !== undefined && data.price !== "") {
             const price = parseFloat(data.price);
-            if (isNaN(price)) {
-                errors.push("Price must be a valid number");
-            } else if (price < 0) {
+            if (price < 0) {
                 errors.push("Price cannot be negative");
             } else if (price > 99999) {
                 errors.push("Price is too high");
@@ -43,18 +55,8 @@ export const ValidationService = {
             errors.push("Location must be 200 characters or less");
         }
 
-        // Date validation
         if (data.startDate && data.endDate) {
-            const startDate = new Date(data.startDate);
-            const endDate = new Date(data.endDate);
-
-            if (isNaN(startDate.getTime())) {
-                errors.push("Invalid start date format");
-            } else if (isNaN(endDate.getTime())) {
-                errors.push("Invalid end date format");
-            } else if (endDate <= startDate) {
-                errors.push("End date must be after start date");
-            }
+            this._validateDateRange(data.startDate, data.endDate, errors);
         }
 
         return errors.length > 0 ? errors : null;
@@ -63,13 +65,8 @@ export const ValidationService = {
     validateLogin(data) {
         const errors = [];
 
-        if (!data.username?.trim()) {
-            errors.push("Username is required");
-        }
-
-        if (!data.password) {
-            errors.push("Password is required");
-        }
+        if (!data.username?.trim()) errors.push("Username is required");
+        if (!data.password) errors.push("Password is required");
 
         return errors.length > 0 ? errors : null;
     },
@@ -111,19 +108,14 @@ export const ValidationService = {
     validateSession(data) {
         const errors = [];
 
-        if (!data.startDateTime) {
-            errors.push("Session start date and time is required");
-        }
-
-        if (!data.endDateTime) {
-            errors.push("Session end date and time is required");
-        }
+        if (!data.startDateTime) errors.push("Session start date and time is required");
+        if (!data.endDateTime) errors.push("Session end date and time is required");
 
         if (!data.capacity) {
             errors.push("Session capacity is required");
         } else {
             const parsedCapacity = parseInt(data.capacity, 10);
-            if (Number.isNaN(parsedCapacity)) {
+            if (isNaN(parsedCapacity)) {
                 errors.push("Session capacity must be a valid number");
             } else if (parsedCapacity < 1) {
                 errors.push("Session capacity must be at least 1");
@@ -131,23 +123,9 @@ export const ValidationService = {
         }
 
         if (data.startDateTime && data.endDateTime) {
-            const start = new Date(data.startDateTime);
-            const end = new Date(data.endDateTime);
-
-            if (Number.isNaN(start.getTime())) {
-                errors.push("Invalid session start date format");
-            } else if (Number.isNaN(end.getTime())) {
-                errors.push("Invalid session end date format");
-            } else if (end <= start) {
-                errors.push("Session end time must be after start time");
-            }
+            this._validateDateRange(data.startDateTime, data.endDateTime, errors);
         }
 
         return errors.length > 0 ? errors : null;
-    },
-
-    isValidEmail(email) {
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return re.test(email);
     },
 };

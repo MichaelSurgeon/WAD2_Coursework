@@ -6,7 +6,7 @@
     <div class="card m-bottom-2">
       <div class="card-section">
         <h1 class="m-0 m-bottom-1">Welcome to Our Yoga Studio</h1>
-        <p style="color: #666; line-height: 1.6; margin: 0;">
+        <p class="intro-text">
           We are dedicated to providing high-quality, accessible yoga classes for students of all levels. 
           Our mission is to help you discover the transformative power of yoga through expert instruction, 
           mindful practice, and a supportive community.
@@ -18,10 +18,10 @@
       <div class="card">
         <div class="card-section">
           <h3 class="m-0 m-bottom-1">🧘 Class Levels</h3>
-          <ul style="list-style: none; padding: 0; margin: 0;">
-            <li style="margin-bottom: 0.8rem;"><strong>Beginner</strong> – New to yoga? Start here.</li>
-            <li style="margin-bottom: 0.8rem;"><strong>Intermediate</strong> – Build strength and flexibility.</li>
-            <li style="margin: 0;"><strong>Advanced</strong> – Deepen your practice.</li>
+          <ul class="feature-list">
+            <li><strong>Beginner</strong> – New to yoga? Start here.</li>
+            <li><strong>Intermediate</strong> – Build strength and flexibility.</li>
+            <li><strong>Advanced</strong> – Deepen your practice.</li>
           </ul>
         </div>
       </div>
@@ -29,10 +29,10 @@
       <div class="card">
         <div class="card-section">
           <h3 class="m-0 m-bottom-1">📅 Class Formats</h3>
-          <ul style="list-style: none; padding: 0; margin: 0;">
-            <li style="margin-bottom: 0.8rem;"><strong>Weekly Blocks</strong> – Multi-week courses.</li>
-            <li style="margin-bottom: 0.8rem;"><strong>Weekend Workshops</strong> – Focused intensive sessions.</li>
-            <li style="margin: 0;"><strong>Drop-In Classes</strong> – Come when it suits you.</li>
+          <ul class="feature-list">
+            <li><strong>Weekly Blocks</strong> – Multi-week courses.</li>
+            <li><strong>Weekend Workshops</strong> – Focused intensive sessions.</li>
+            <li><strong>Drop-In Classes</strong> – Come when it suits you.</li>
           </ul>
         </div>
       </div>
@@ -42,13 +42,13 @@
       <div class="card-section">
         <h2 class="m-0 m-bottom-1">Getting Started</h2>
         {{^user}}
-        <p style="color: #666; margin: 0;">
+        <p class="getting-started-text">
           Browse our complete course catalog below. Each listing includes location, pricing, class schedule, and availability. 
-          <strong><a href="/register" style="color: var(--brand);">Register an account</a></strong> to book classes and secure your spot.
+          <strong><a href="/register" class="primary-link">Register an account</a></strong> to book classes and secure your spot.
         </p>
         {{/user}}
         {{#user}}
-        <p style="color: #666; margin: 0;">
+        <p class="getting-started-text">
           Browse our course catalog below and book the classes that work for your schedule. 
           You can also view detailed information about each class including location, pricing, and session times.
         </p>

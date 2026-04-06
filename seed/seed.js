@@ -28,20 +28,7 @@ async function wipeAll() {
   ]);
 }
 
-async function ensureDemoStudent() {
-  let student = await UserModel.findByEmail("fiona@student.local");
-  if (!student) {
-    student = await UserModel.create({
-      name: "Fiona",
-      email: "fiona@student.local",
-      role: "student",
-    });
-  }
-  return student;
-}
-
-async function createAuthUsers() {
-  // UserModel.create handles password hashing
+async function createUsers() {
   const admin = await UserModel.create({
     username: "admin",
     password: "admin",
@@ -62,11 +49,6 @@ async function createAuthUsers() {
 }
 
 async function createWeekendWorkshop() {
-  const instructor = await UserModel.create({
-    name: "Ava",
-    email: "ava@yoga.local",
-    role: "instructor",
-  });
   const course = await CourseModel.create({
     title: "Winter Mindfulness Workshop",
     level: "beginner",
@@ -76,7 +58,6 @@ async function createWeekendWorkshop() {
     endDate: "2026-01-11",
     location: "Studio A, 42 Wellness Street",
     price: 85,
-    instructorId: instructor._id,
     sessionIds: [],
     description: "Two days of breath, posture alignment, and meditation.",
   });
@@ -98,15 +79,10 @@ async function createWeekendWorkshop() {
   await CourseModel.update(course._id, {
     sessionIds: sessions.map((s) => s._id),
   });
-  return { course, sessions, instructor };
+  return { course, sessions };
 }
 
 async function createWeeklyBlock() {
-  const instructor = await UserModel.create({
-    name: "Ben",
-    email: "ben@yoga.local",
-    role: "instructor",
-  });
   const course = await CourseModel.create({
     title: "12‑Week Vinyasa Flow",
     level: "intermediate",
@@ -116,7 +92,6 @@ async function createWeeklyBlock() {
     endDate: "2026-04-20",
     location: "Studio B, 42 Wellness Street",
     price: 180,
-    instructorId: instructor._id,
     sessionIds: [],
     description: "Progressive sequences building strength and flexibility.",
   });
@@ -138,7 +113,7 @@ async function createWeeklyBlock() {
   await CourseModel.update(course._id, {
     sessionIds: sessions.map((s) => s._id),
   });
-  return { course, sessions, instructor };
+  return { course, sessions };
 }
 
 async function verifyAndReport() {
@@ -165,11 +140,8 @@ async function run() {
   console.log("Wiping existing data…");
   await wipeAll();
 
-  console.log("Creating demo student…");
-  const student = await ensureDemoStudent();
-
   console.log("Creating auth users…");
-  const authUsers = await createAuthUsers();
+  const authUsers = await createUsers();
 
   console.log("Creating weekend workshop…");
   const w = await createWeekendWorkshop();
@@ -180,7 +152,6 @@ async function run() {
   await verifyAndReport();
 
   console.log("\n✅ Seed complete.");
-  console.log("Student ID           :", student._id);
   console.log("Organiser (admin)    :", authUsers.admin.username, "/", authUsers.admin.password);
   console.log("Regular user         :", authUsers.user.username, "/", authUsers.user.password);
   console.log(
@@ -198,6 +169,6 @@ async function run() {
 }
 
 run().catch((err) => {
-  console.error("❌ Seed failed:", err?.stack || err);
+  console.error("Seed failed:", err?.stack || err);
   process.exit(1);
 });

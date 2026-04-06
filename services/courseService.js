@@ -4,14 +4,13 @@ import { BookingModel } from "../models/bookingModel.js";
 import { UserModel } from "../models/userModel.js";
 import { fmtDate, fmtDateOnly, fmtDateForInput } from "../utils/dateFormatter.js";
 
-const calculateDurationWeeks = (startDate, endDate) => {
-    if (!startDate || !endDate) return null;
-    const diffMs = new Date(endDate) - new Date(startDate);
-    return Math.max(1, Math.round(diffMs / (7 * 24 * 60 * 60 * 1000)));
-};
+const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
 
-const formatDurationDisplay = (weeks) => {
-    if (!weeks) return "TBA";
+const getDurationDisplay = (startDate, endDate) => {
+    if (!startDate || !endDate)
+        return "TBA";
+
+    const weeks = Math.max(1, Math.round((new Date(endDate) - new Date(startDate)) / MS_PER_WEEK));
     return `${weeks} ${weeks === 1 ? "week" : "weeks"}`;
 };
 
@@ -40,7 +39,7 @@ const formatCourseData = (course, sessionCount) => {
         allowDropIn: course.allowDropIn,
         startDate: course.startDate ? fmtDateOnly(course.startDate) : "",
         endDate: course.endDate ? fmtDateOnly(course.endDate) : "",
-        durationDisplay: formatDurationDisplay(calculateDurationWeeks(course.startDate, course.endDate)),
+        durationDisplay: getDurationDisplay(course.startDate, course.endDate),
         sessionsCount: sessionCount,
     };
 };

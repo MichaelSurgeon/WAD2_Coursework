@@ -2,7 +2,7 @@
 {{> header}}
 
 <main class="wrap">
-  <div class="card" style="max-width: 600px; margin: 2rem auto;">
+  <div class="card card-narrow">
     <div class="card-header card-header-success">
       <h1>✓ Booking Confirmed</h1>
       <p>Your yoga class booking has been successfully created</p>
@@ -10,22 +10,22 @@
 
     <div class="card-section">
       <h3>Booking Details</h3>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div class="booking-details-grid">
         <div class="info-box">
           <strong>Booking ID</strong>
-          <p style="margin: 0.5rem 0 0 0; font-family: monospace; color: #666;">{{booking.id}}</p>
+          <p class="info-value-mono">{{booking.id}}</p>
         </div>
         <div class="info-box">
           <strong>Type</strong>
-          <p style="margin: 0.5rem 0 0 0; color: #666; text-transform: capitalize;">{{booking.type}}</p>
+          <p class="info-value-capitalize">{{booking.type}}</p>
         </div>
         <div class="info-box">
           <strong>Status</strong>
-          <p style="margin: 0.5rem 0 0 0; color: #10b981; font-weight: 600; text-transform: uppercase;">{{booking.status}}</p>
+          <p class="info-value-success-uppercase">{{booking.status}}</p>
         </div>
         <div class="info-box">
           <strong>Created</strong>
-          <p style="margin: 0.5rem 0 0 0; color: #666;">{{booking.createdAt}}</p>
+          <p class="info-value-muted">{{booking.createdAt}}</p>
         </div>
       </div>
     </div>
