@@ -1,6 +1,7 @@
 // I Had to use unstable_mockModule and await import as jest.mock doesn't work with ES modules, only commonJS. 
 // See https://jestjs.io/docs/ecmascript-modules#mocking-modules
-// Same throughout the tests, doing it this way means the mocks are registered before imports.
+// Same throughout the tests, doing it this way means the mocks are registered before imports. 
+// Old comonJS would call the mocks after statch imports, which is too late for ES modules to resolve the dependency mocks.
 
 import { jest, describe, it, expect, beforeAll, beforeEach } from "@jest/globals";
 
